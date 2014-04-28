@@ -1,0 +1,31 @@
+{
+  "baseUrl": "/react-autocomplete/",
+  "locals": {
+    "repo": "https://github.com/prometheusresearch/react-autocomplete",
+    "title": "React Autocomplete",
+    "pages": [
+      {
+        "name": "React Autocomplete",
+        "path": ""
+      },
+      {
+        "name": "Examples",
+        "pages": [
+          {
+            "name": "Basic Usage",
+            "path": "examples/basic.html"
+          },
+          {
+            "name": "XHR-backed autocomplete",
+            "path": "examples/xhr.html"
+          }
+        ]
+      }
+    ]
+  },
+  "plugins": [
+    "./plugins/react-templates.coffee",
+    "./plugins/less-file.coffee",
+    "./plugins/jsx.coffee"
+  ]
+}
