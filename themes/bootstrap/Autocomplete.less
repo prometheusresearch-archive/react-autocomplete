@@ -1,0 +1,22 @@
+.react-autocomplete-search {
+  .form-control();
+}
+
+.react-autocomplete-results {
+  .dropdown-menu();
+  width: 100%;
+  max-height: 200px;
+  overflow: auto;
+}
+
+.react-autocomplete-result {
+  cursor: pointer;
+  & > a {
+    text-decoration: none;
+  }
+}
+
+.react-autocomplete-result-active {
+  color: @dropdown-link-hover-color;
+  background-color: @dropdown-link-hover-bg;
+}
