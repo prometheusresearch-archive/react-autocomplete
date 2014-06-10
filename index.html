@@ -1,0 +1,244 @@
+
+
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>React Autocomplete &mdash; react-autocomplete 0.1.0 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="_static/overrides.css" type="text/css" />
+  
+    <link rel="top" title="react-autocomplete 0.1.0 documentation" href="#"/>
+        <link rel="next" title="Examples" href="examples/index.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        <a href="#" class="fa fa-home"> react-autocomplete</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+        
+            <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="">React Autocomplete</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/index.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/basic.html">Basic usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/xhr.html">XHR-backed Autocomplete</a></li>
+</ul>
+</li>
+</ul>
+
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="#">react-autocomplete</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="#">Docs</a> &raquo;</li>
+      
+    <li>React Autocomplete</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="_sources/index.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            
+  <div class="section" id="react-autocomplete">
+<h1>React Autocomplete<a class="headerlink" href="#react-autocomplete" title="Permalink to this headline">¶</a></h1>
+<p>React Autocomplete is an autocomplete component for <a class="reference external" href="http://facebook.github.io/react">React</a>.</p>
+<div class="section" id="getting-started">
+<h2>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
+<p>React Autocomplete can be installed via npm:</p>
+<div class="highlight-python"><div class="highlight"><pre>% npm install prometheusresearch/react-autocomplete
+</pre></div>
+</div>
+<p>or bower:</p>
+<div class="highlight-python"><div class="highlight"><pre>% bower install prometheusresearch/react-autocomplete
+</pre></div>
+</div>
+<p>Then it can be consumed via CommonJS module system:</p>
+<div class="inline admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Use <a class="reference external" href="http://browserify.org">browserify</a> or <a class="reference external" href="http://webpack.github.io">webpack</a> to bundle CommonJS modules for browser.</p>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>var Autocomplete = require(&#39;react-autocomplete&#39;)
+
+React.renderComponent(
+  &lt;Autocomplete options={[{title: &#39;Item&#39;, id: &#39;item&#39;}]} /&gt;,
+  document.getElementById(&#39;autocomplete&#39;)
+)
+</pre></div>
+</div>
+<p>See <a class="reference internal" href="examples/index.html"><em>Examples</em></a> page for more information on how to use and extend React
+Autocomplete component.</p>
+</div>
+<div class="section" id="api">
+<h2>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h2>
+<p>React Autocomplete exposes a single component <tt class="docutils literal"><span class="pre">Autocomplete</span></tt> which allows the
+following props to be applied:</p>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">options</span></tt></dt>
+<dd>Opaque object which will be served as an argument to <tt class="docutils literal"><span class="pre">search</span></tt> function, by
+default <tt class="docutils literal"><span class="pre">search</span></tt> expects an array with of objects of shape <tt class="docutils literal"><span class="pre">{title:</span> <span class="pre">...,</span>
+<span class="pre">id:</span> <span class="pre">...}</span></tt>.</dd>
+<dt><tt class="docutils literal"><span class="pre">search</span></tt></dt>
+<dd>Search function which takes <tt class="docutils literal"><span class="pre">options</span></tt> object and <tt class="docutils literal"><span class="pre">searchTerm</span></tt>. By default
+a function which searches through array is used.</dd>
+<dt><tt class="docutils literal"><span class="pre">resultRenderer</span></tt></dt>
+<dd>A component which renders a single result. By default <tt class="docutils literal"><span class="pre">Result</span></tt> component is
+used.</dd>
+<dt><tt class="docutils literal"><span class="pre">value</span></tt></dt>
+<dd>Initial value.</dd>
+<dt><tt class="docutils literal"><span class="pre">onChange(value)</span></tt></dt>
+<dd>Callback which fires on change.</dd>
+<dt><tt class="docutils literal"><span class="pre">onError(error)</span></tt></dt>
+<dd>Callback which fires on error.</dd>
+</dl>
+</div>
+<div class="section" id="styling">
+<h2>Styling<a class="headerlink" href="#styling" title="Permalink to this headline">¶</a></h2>
+<p>The following CSS classes are available to style React Autocomplete:</p>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">react-autocomplete-Autocomplete</span></tt></dt>
+<dd>Autocomplete component.</dd>
+<dt><tt class="docutils literal"><span class="pre">react-autocomplete-Autocomplete__search</span></tt></dt>
+<dd>Search input of autocomplete component.</dd>
+<dt><tt class="docutils literal"><span class="pre">react-autocomplete-Autocomplete__results</span></tt></dt>
+<dd>Results of autocomplete component.</dd>
+<dt><tt class="docutils literal"><span class="pre">react-autocomplete-Autocomplete--resultsShown</span></tt></dt>
+<dd>Autocomplete component when results are shown.</dd>
+<dt><tt class="docutils literal"><span class="pre">react-autocomplete-Results</span></tt></dt>
+<dd>Results component.</dd>
+<dt><tt class="docutils literal"><span class="pre">react-autocomplete-Result</span></tt></dt>
+<dd>Result component.</dd>
+<dt><tt class="docutils literal"><span class="pre">react-autocomplete-Result--active</span></tt></dt>
+<dd>Result component when it has focus.</dd>
+</dl>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="examples/index.html" class="btn btn-neutral float-right" title="Examples"/>Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2014, Prometheus Research, LLC.
+    </p>
+  </div>
+
+  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="_static/bundle.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
