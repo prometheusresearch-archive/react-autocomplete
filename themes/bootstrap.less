@@ -1,22 +1,24 @@
-.react-autocomplete-search {
+@import (reference) "bootstrap/less/bootstrap.less";
+
+.react-autocomplete-Autocomplete__search {
   .form-control();
 }
 
-.react-autocomplete-results {
+.react-autocomplete-Autocomplete__results {
   .dropdown-menu();
   width: 100%;
   max-height: 200px;
   overflow: auto;
 }
 
-.react-autocomplete-result {
+.react-autocomplete-Result {
   cursor: pointer;
   & > a {
     text-decoration: none;
   }
 }
 
-.react-autocomplete-result-active {
+.react-autocomplete-Result--active {
   color: @dropdown-link-hover-color;
   background-color: @dropdown-link-hover-bg;
 }

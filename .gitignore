@@ -1,4 +1,4 @@
 node_modules
-docs/build
+docs/_build
 standalone/react-autocomplete.min.js
 standalone/react-autocomplete.js
