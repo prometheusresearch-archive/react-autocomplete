@@ -1,7 +1,8 @@
-@import (reference) "bootstrap/less/bootstrap.less";
-
 .react-autocomplete-Autocomplete__search {
   .form-control();
+  font-size: inherit;
+  height: auto;
+  padding: 3px 6px;
 }
 
 .react-autocomplete-Autocomplete__results {
@@ -9,6 +10,13 @@
   width: 100%;
   max-height: 200px;
   overflow: auto;
+  font-size: inherit;
+  padding: inherit;
+  height: auto;
+}
+
+.react-autocomplete-Results {
+  overflow-x: hidden;
 }
 
 .react-autocomplete-Result {
