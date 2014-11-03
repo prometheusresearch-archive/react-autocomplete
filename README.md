@@ -4,7 +4,7 @@ Autocomplete component for [React][].
 
 ## Credits
 
-React Autocomplete is free software created by [Prometheus Research][] and is
+React Autocomplete is free software created by [Prometheus Research, LLC] and is
 released under the MIT license.
 
 [React]: http://facebook.github.io/react/
