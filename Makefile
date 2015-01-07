@@ -9,6 +9,10 @@ docs-preview docs-publish::
 lint:
 	@eslint-jsx lib/
 
+build:
+	+@mkdir -p dist
+	+@$(BIN)/jsx --harmony lib/ dist/
+
 clean:
 	@rm -rf ./node_modules/
 
