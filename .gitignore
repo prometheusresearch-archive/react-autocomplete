@@ -1,4 +1,2 @@
 node_modules
-docs/_build
-standalone/react-autocomplete.min.js
-standalone/react-autocomplete.js
+example/bundle.js

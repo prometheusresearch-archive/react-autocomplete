@@ -1,30 +1,36 @@
 {
-  "name": "react-autocomplete",
-  "version": "0.0.0",
-  "description": "Autocomplete component for React",
+  "name": "react-selectbox",
+  "version": "1.0.0",
+  "description": "Selectbox (with autocompletion) component for React",
   "main": "lib/index.js",
   "scripts": {
     "test": "make test"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/prometheusresearch/react-autocomplete.git"
+    "url": "git://github.com/prometheusresearch/react-selectbox.git"
   },
   "keywords": [
     "react",
-    "autocomplete"
+    "selectbox",
+    "autocomplete",
+    "react-component"
   ],
+  "dependencies": {
+    "reactify": "^1.0.0"
+  },
   "peerDependencies": {
-    "react": "^0.10.0"
+    "react": "^0.12.2"
   },
   "devDependencies": {
-    "browserify": "^4.1.9",
-    "eslint-jsx": "git+https://github.com/andreypopp/eslint#jsx",
-    "jquery": "^2.1.1",
-    "mocha": "^1.18.2",
-    "mochify": "^0.8.1",
-    "react": "^0.10.0",
-    "sinon": "^1.9.1"
+    "browserify": "^8.1.1",
+    "mocha": "^2.1.0",
+    "mochify": "^2.1.1",
+    "object-assign": "^2.0.0",
+    "react": "^0.12.2",
+    "reactify": "^0.11.1",
+    "sinon": "^1.12.2",
+    "watchify": "^2.2.1"
   },
   "browserify": {
     "transform": [
@@ -39,10 +45,7 @@
   "author": "Prometheus Research",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/prometheusresearch/react-autocomplete/issues"
+    "url": "https://github.com/prometheusresearch/react-selectbox/issues"
   },
-  "homepage": "https://github.com/prometheusresearch/react-autocomplete",
-  "dependencies": {
-    "reactify": "^0.11.0"
-  }
+  "homepage": "https://github.com/prometheusresearch/react-selectbox"
 }

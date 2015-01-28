@@ -1,10 +1,10 @@
-# React Autocomplete
+# React Selectbox
 
-Autocomplete component for [React][].
+Selectbox (with autocompletion) component for [React][].
 
 ## Credits
 
-React Autocomplete is free software created by [Prometheus Research][] and is
+React Selectbox is free software created by [Prometheus Research][] and is
 released under the MIT license.
 
 [React]: http://facebook.github.io/react/
