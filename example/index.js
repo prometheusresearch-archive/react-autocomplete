@@ -8,7 +8,7 @@ if (Object.assign === undefined) {
 }
 
 var React         = require('react/addons');
-var Autocomplete  = require('../');
+var Autocomplete  = require('../lib/themes/Bootstrap');
 
 var Example = React.createClass({
 
