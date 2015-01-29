@@ -13,3 +13,7 @@ ci-phantomjs:
 
 test-phantomjs:
 	@$(BIN)/mochify -R spec $(TESTS)
+
+publish:
+	@git push --tags origin HEAD:master
+	@npm publish
