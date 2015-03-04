@@ -14,7 +14,7 @@
     "react-component"
   ],
   "dependencies": {
-    "react": "^0.12.2"
+    "react": "http://registry.npmjs.org/react/-/react-0.12.2.tgz#*"
   },
   "author": "Prometheus Research",
   "license": "MIT",
