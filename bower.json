@@ -7,6 +7,7 @@
     "type": "git",
     "url": "git://github.com/prometheusresearch/react-selectbox.git"
   },
+  "rex": {},
   "keywords": [
     "react",
     "selectbox",
