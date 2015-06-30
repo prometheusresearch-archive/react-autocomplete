@@ -17,7 +17,6 @@
     "react-component"
   ],
   "dependencies": {
-    "reactify": "^1.0.0"
   },
   "peerDependencies": {
     "react": ">= 0.12.2, < 0.14.0"
@@ -31,16 +30,6 @@
     "reactify": "^0.11.1",
     "sinon": "^1.12.2",
     "watchify": "^2.2.1"
-  },
-  "browserify": {
-    "transform": [
-      [
-        "reactify",
-        {
-          "es6": true
-        }
-      ]
-    ]
   },
   "author": "Prometheus Research",
   "license": "MIT",
