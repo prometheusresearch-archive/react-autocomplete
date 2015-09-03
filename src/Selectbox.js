@@ -1,23 +1,38 @@
 /**
  * @copyright 2015, Prometheus Research, LLC
  */
-'use strict';
 
-var React         = require('react/addons');
-var PropTypes     = React.PropTypes;
-var cx            = React.addons.classSet;
-var ResultList    = require('./ResultList');
-var emptyFunction = require('./emptyFunction');
+import React, {PropTypes} from 'react';
+import debounce           from 'lodash/function/debounce';
+import cx                 from 'classnames';
+import emptyFunction      from 'empty/function';
+import Tether             from 'tether';
+import Layer              from './Layer';
+import ResultList         from './ResultList';
 
-var KEYS = {
+const KEYS = {
   ARROW_UP: 'ArrowUp',
   ARROW_DOWN: 'ArrowDown',
   ENTER: 'Enter'
 };
 
-var Selectbox = React.createClass({
+const TETHER_CONFIG = {
+  attachment: 'top left',
+  targetAttachment: 'bottom left',
+  optimizations: {
+    moveElement: false
+  },
+  constraints: [
+    {
+      to: 'window',
+      attachment: 'together'
+    }
+  ]
+};
 
-  propTypes: {
+export default class Selectbox extends React.Component {
+
+  static propTypes = {
     options: PropTypes.any,
     search: PropTypes.func,
     resultRenderer: PropTypes.element,
@@ -25,15 +40,24 @@ var Selectbox = React.createClass({
     onChange: PropTypes.func,
     onError: PropTypes.func,
 
+    className: PropTypes.string,
+    placeholder: PropTypes.string,
+
     style: PropTypes.object,
     styleOnResultsShown: PropTypes.object,
     styleInput: PropTypes.object,
     styleResultList: PropTypes.object,
     styleResult: PropTypes.object,
     styleResultOnActive: PropTypes.object
-  },
+  };
 
-  style: {
+  static defaultProps = {
+    search: searchArray,
+    onFocus: emptyFunction,
+    onBlur: emptyFunction
+  };
+
+  static style = {
     base: {
       position: 'relative',
       outline: 'none',
@@ -43,20 +67,32 @@ var Selectbox = React.createClass({
       width: '100%',
       boxSizing: 'border-box'
     },
-  },
+  }
+
+  constructor(props) {
+    super(props);
+    this._tether = null;
+    this._setOpenDebounced = debounce(this._setOpen, 0);
+    this.state = {
+      open: false,
+      results: [],
+      searchTerm: this._searchTermFromProps(this.props),
+      focusedValue: null
+    };
+  }
 
   render() {
-    var {
+    let {
       className, placeholder, resultRenderer,
       style, styleOnResultsShown, styleInput, styleResultList,
       styleResult, styleResultOnActive,
       ...props
     } = this.props;
-    var {showResults} = this.state;
+    let {open} = this.state;
     className = cx(
       className,
       'react-selectbox-Selectbox',
-      showResults ?
+      open ?
         'react-selectbox-Selectbox--resultsShown' :
         null
     );
@@ -68,79 +104,91 @@ var Selectbox = React.createClass({
         onChange={undefined}
         onError={undefined}
         options={undefined}
-        tabIndex="1"
         className={className}
-        onFocus={this.onFocus}
-        onBlur={this.onBlur}
         style={{
           ...style,
-          ...(showResults ? styleOnResultsShown : null),
-          ...this.style.base
+          ...(open ? styleOnResultsShown : null),
+          ...this.constructor.style.base
         }}>
         <input
           ref="search"
+          onFocus={this._onFocus}
+          onBlur={this._onBlur}
           className="react-selectbox-Selectbox__search"
           placeholder={placeholder}
-          onClick={this.showAllResults}
           onChange={this.onQueryChange}
-          onFocus={this.showAllResults}
-          onBlur={this.onQueryBlur}
           onKeyDown={this.onQueryKeyDown}
-          style={{...styleInput, ...this.style.input}}
+          style={{...styleInput, ...this.constructor.style.input}}
           value={this.state.searchTerm}
           />
-        <ResultList
-          className="react-selectbox-Selectbox__results"
-          onSelect={this.onValueChange}
-          onFocus={this.onValueFocus}
-          results={this.state.results}
-          focusedValue={this.state.focusedValue}
-          show={this.state.showResults}
-          renderer={resultRenderer}
-          style={styleResultList}
-          styleResult={styleResult}
-          styleResultOnActive={styleResultOnActive}
-          />
+        {open &&
+          <Layer
+            didMount={this._layerDidMount}
+            didUpdate={this._layerDidUpdate}
+            willUnmount={this._layerWillUnmount}>
+            <ResultList
+              onFocus={this._onListFocus}
+              onBlur={this._onListBlur}
+              onResultFocus={this._onResultFocus}
+              className="react-selectbox-Selectbox__results"
+              onSelect={this.onValueChange}
+              results={this.state.results}
+              focusedValue={this.state.focusedValue}
+              renderer={resultRenderer}
+              style={styleResultList}
+              styleResult={styleResult}
+              styleResultOnActive={styleResultOnActive}
+              />
+          </Layer>}
       </div>
     );
-  },
+  }
 
-  getDefaultProps() {
-    return {
-      search: searchArray,
-      onFocus: emptyFunction,
-      onBlur: emptyFunction
-    };
-  },
+  _onResultFocus = (value) => {
+    this.setState({focusedValue: value});
+  }
 
-  getInitialState() {
-    return {
-      results: [],
-      showResults: false,
-      showResultsInProgress: false,
-      searchTerm: this.getSearchTerm(this.props),
-      focusedValue: null
-    };
-  },
+  _onListFocus = () => {
+    this._open();
+  }
+
+  _onListBlur = () => {
+    this._close();
+  }
 
   componentWillReceiveProps(nextProps) {
     if (!equalValue(nextProps.value, this.props.value)) {
-      var searchTerm = this.getSearchTerm(nextProps);
+      let searchTerm = this._searchTermFromProps(nextProps);
       this.setState({searchTerm});
     }
-  },
+  }
 
-  componentWillMount() {
-    this.blurTimer = null;
-  },
+  _layerDidMount = (element) => {
+    let target = React.findDOMNode(this.refs.search);
+    let size = target.getBoundingClientRect();
+    element.style.width = `${size.width}px`;
+    this._tether = new Tether({element, target, ...TETHER_CONFIG});
+  }
 
-  getSearchTerm(props) {
-    var {searchTerm, options, value} = props;
+  _setOpen(open) {
+    this.setState({open});
+  }
+
+  _open() {
+    this._setOpenDebounced(true);
+  }
+
+  _close() {
+    this._setOpenDebounced(false);
+  }
+
+  _searchTermFromProps(props) {
+    let {searchTerm, value} = props;
     if (!searchTerm && value) {
-      searchTerm = value.title
+      searchTerm = value.title;
     }
     return searchTerm || '';
-  },
+  }
 
   /**
     * Show results for a search term value.
@@ -149,25 +197,23 @@ var Selectbox = React.createClass({
     *
     * @param {Search} searchTerm
     */
-  showResults(searchTerm) {
-    this.setState({showResultsInProgress: true});
+  showResults = (searchTerm) => {
     this.props.search(
       this.props.options,
       searchTerm.trim(),
       this.onSearchComplete
     );
-  },
+  }
 
-  showAllResults() {
-    if (!this.state.showResultsInProgress && !this.state.showResults) {
-      this.showResults('');
-    }
-  },
+  showAllResults = () => {
+    this.showResults('');
+    this._open();
+  }
 
-  onValueChange(value) {
-    var state = {
+  onValueChange = (value) => {
+    let state = {
       value: value,
-      showResults: false
+      open: false
     };
 
     if (value) {
@@ -179,9 +225,9 @@ var Selectbox = React.createClass({
     if (this.props.onChange) {
       this.props.onChange(value);
     }
-  },
+  }
 
-  onSearchComplete(err, results) {
+  onSearchComplete = (err, results) => {
     if (err) {
       if (this.props.onError) {
         this.props.onError(err);
@@ -191,54 +237,33 @@ var Selectbox = React.createClass({
     }
 
     this.setState({
-      showResultsInProgress: false,
-      showResults: true,
+      open: true,
       results: results
     });
-  },
+  }
 
-  onValueFocus(value) {
+  onValueFocus = (value) => {
     this.setState({focusedValue: value});
-  },
+  }
 
-  onQueryChange(e) {
-    var searchTerm = e.target.value;
+  onQueryChange = (e) => {
+    let searchTerm = e.target.value;
     this.setState({
       searchTerm: searchTerm,
       focusedValue: null
     });
     this.showResults(searchTerm);
-  },
+  }
 
-  onFocus() {
-    if (this.blurTimer) {
-      clearTimeout(this.blurTimer);
-      this.blurTimer = null;
-    }
-    this.refs.search.getDOMNode().focus();
-    this.props.onFocus();
-  },
+  _onFocus = () => {
+    this.showAllResults();
+  }
 
-  onBlur() {
-    // wrap in setTimeout so we can catch a click on results
-    this.blurTimer = setTimeout(() => {
-      if (this.isMounted()) {
-        var nextState = {
-          showResults: false,
-        };
-        if (this.state.searchTerm !== '') {
-          nextState.searchTerm = this.props.value ? this.props.value.title : '';
-        }
-        if (this.state.searchTerm === '') {
-          this.props.onChange(undefined);
-        }
-        this.setState(nextState);
-      }
-    }, 100);
-    this.props.onBlur();
-  },
+  _onBlur = () => {
+    this._close();
+  }
 
-  onQueryKeyDown(e) {
+  onQueryKeyDown = (e) => {
 
     if (e.key === KEYS.ENTER) {
       e.preventDefault();
@@ -246,9 +271,9 @@ var Selectbox = React.createClass({
         this.onValueChange(this.state.focusedValue);
       }
 
-    } else if (e.key === KEYS.ARROW_UP && this.state.showResults) {
+    } else if (e.key === KEYS.ARROW_UP && this.state.open) {
       e.preventDefault();
-      var prevIdx = Math.max(
+      let prevIdx = Math.max(
         this.focusedValueIndex() - 1,
         0
       );
@@ -258,36 +283,35 @@ var Selectbox = React.createClass({
 
     } else if (e.key === KEYS.ARROW_DOWN) {
       e.preventDefault();
-      if (this.state.showResults) {
-        var nextIdx = Math.min(
-          this.focusedValueIndex() + (this.state.showResults ? 1 : 0),
+      if (this.state.open) {
+        let nextIdx = Math.min(
+          this.focusedValueIndex() + (this.state.open ? 1 : 0),
           this.state.results.length - 1
         );
         this.setState({
-          showResults: true,
           focusedValue: this.state.results[nextIdx]
         });
       } else {
         this.showAllResults();
       }
     }
-  },
+  }
 
   focusedValueIndex() {
     if (!this.state.focusedValue) {
       return -1;
     }
-    for (var i = 0, len = this.state.results.length; i < len; i++) {
+    for (let i = 0, len = this.state.results.length; i < len; i++) {
       if (this.state.results[i].id === this.state.focusedValue.id) {
         return i;
       }
     }
     return -1;
   }
-});
+}
 
 function equalValue(a, b) {
-  return a.id == b.id && a.title === b.title;
+  return a.id == b.id && a.title === b.title; // eslint-disable-line eqeqeq
 }
 
 /**
@@ -305,9 +329,9 @@ function searchArray(options, searchTerm, cb) {
 
   searchTerm = new RegExp(searchTerm, 'i');
 
-  var results = [];
+  let results = [];
 
-  for (var i = 0, len = options.length; i < len; i++) {
+  for (let i = 0, len = options.length; i < len; i++) {
     if (searchTerm.exec(options[i].title)) {
       results.push(options[i]);
     }
@@ -315,6 +339,3 @@ function searchArray(options, searchTerm, cb) {
 
   cb(null, results);
 }
-
-
-module.exports = Selectbox;

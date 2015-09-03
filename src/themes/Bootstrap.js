@@ -1,12 +1,11 @@
 /**
  * @copyright 2015, Prometheus Research, LLC
  */
-'use strict';
 
-var React            = require('react');
-var SelectboxBase = require('../');
+import React         from 'react';
+import SelectboxBase from '../Selectbox';
 
-var styleInput = {
+let styleInput = {
   display: 'block',
   height: '34px',
   padding: '6px 12px',
@@ -19,9 +18,9 @@ var styleInput = {
   borderRadius: '4px',
   boxShadow: 'inset 0 1px 1px rgba(0,0,0,.075)',
   transition: 'border-color ease-in-out .15s,box-shadow ease-in-out .15s'
-}
+};
 
-var styleResultList = {
+let styleResultList = {
   position: 'absolute',
   top: '100%',
   width: '100%',
@@ -41,7 +40,7 @@ var styleResultList = {
   boxShadow: '0 6px 12px rgba(0,0,0,.175)'
 };
 
-var styleResult = {
+let styleResult = {
   display: 'block',
   padding: '3px 20px',
   clear: 'both',
@@ -51,17 +50,17 @@ var styleResult = {
   whiteSpace: 'nowrap'
 };
 
-var styleResultOnActive = {
+let styleResultOnActive = {
   color: '#262626',
   textDecoration: 'none',
   backgroundColor: '#f5f5f5'
 };
 
-var Selectbox = React.createClass({
+export default class Selectbox extends React.Component {
 
   render() {
     return (
-      <SelectboxBase 
+      <SelectboxBase
         {...this.props}
         styleInput={styleInput}
         styleResultList={styleResultList}
@@ -70,6 +69,4 @@ var Selectbox = React.createClass({
         />
     );
   }
-});
-
-module.exports = Selectbox;
+}
