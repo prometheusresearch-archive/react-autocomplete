@@ -165,6 +165,8 @@ export default class Selectbox extends React.Component {
 
   _layerDidMount = (element) => {
     let target = React.findDOMNode(this.refs.search);
+    let size = target.getBoundingClientRect();
+    element.style.width = `${size.width}px`;
     this._tether = new Tether({element, target, ...TETHER_CONFIG});
   }
 

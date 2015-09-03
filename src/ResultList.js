@@ -36,7 +36,7 @@ export default class ResultList extends React.Component {
     };
     className = cx('react-selectbox-ResultList', className);
     return (
-      <ul {...props} tabIndex={0} style={style} className={className}>
+      <ul {...props} tabIndex={-1} style={style} className={className}>
         {results.map(this.renderResult, this)}
       </ul>
     );
