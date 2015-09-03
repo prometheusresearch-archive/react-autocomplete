@@ -2,6 +2,7 @@
  * @copyright 2015, Prometheus Research, LLC
  */
 
+import autobind           from 'autobind-decorator';
 import React, {PropTypes} from 'react';
 import debounce           from 'lodash/function/debounce';
 import cx                 from 'classnames';
@@ -33,14 +34,60 @@ const TETHER_CONFIG = {
 export default class Selectbox extends React.Component {
 
   static propTypes = {
+
+    /**
+     * Option object is opaque to <Selectbox /> component.
+     *
+     * It is passed to `search` function (also passed as props) along with
+     * the current `searchTerm` to return a list of results.
+     *
+     * The default `search` function expectds `options` to be an array of
+     * objects with `title` attribute on which search is performed.
+     */
     options: PropTypes.any,
+
+    /**
+     * Search function.
+     *
+     * It accepts three arguments: `options`, `searchTerm` and `cb`:
+     *
+     * * `options` is the `options` prop passed to <Selectbox />.
+     * * `searchTerm` is the current value of input
+     * * `cb` is a Node-style callback which should be used to return results
+     *   back to <Selectbox />
+     */
     search: PropTypes.func,
+
+    /**
+     * React component which is used to render a single result in result list.
+     */
     resultRenderer: PropTypes.element,
+
+    /**
+     * Value.
+     *
+     * Should be an object with `title` attribute.
+     */
     value: PropTypes.object,
+
+    /**
+     * Callback which is called when a result is being choosen.
+     */
     onChange: PropTypes.func,
+
+    /**
+     * Callback which is called when the `search` function returns an error.
+     */
     onError: PropTypes.func,
 
+    /**
+     * Extra CSS class name
+     */
     className: PropTypes.string,
+
+    /**
+     * Input placeholder.
+     */
     placeholder: PropTypes.string,
 
     style: PropTypes.object,
@@ -116,8 +163,8 @@ export default class Selectbox extends React.Component {
           onBlur={this._onBlur}
           className="react-selectbox-Selectbox__search"
           placeholder={placeholder}
-          onChange={this.onQueryChange}
-          onKeyDown={this.onQueryKeyDown}
+          onChange={this._onQueryChange}
+          onKeyDown={this._onQueryKeyDown}
           style={{...styleInput, ...this.constructor.style.input}}
           value={this.state.searchTerm}
           />
@@ -131,7 +178,7 @@ export default class Selectbox extends React.Component {
               onBlur={this._onListBlur}
               onResultFocus={this._onResultFocus}
               className="react-selectbox-Selectbox__results"
-              onSelect={this.onValueChange}
+              onSelect={this._onValueChange}
               results={this.state.results}
               focusedValue={this.state.focusedValue}
               renderer={resultRenderer}
@@ -144,18 +191,6 @@ export default class Selectbox extends React.Component {
     );
   }
 
-  _onResultFocus = (value) => {
-    this.setState({focusedValue: value});
-  }
-
-  _onListFocus = () => {
-    this._open();
-  }
-
-  _onListBlur = () => {
-    this._close();
-  }
-
   componentWillReceiveProps(nextProps) {
     if (!equalValue(nextProps.value, this.props.value)) {
       let searchTerm = this._searchTermFromProps(nextProps);
@@ -163,25 +198,60 @@ export default class Selectbox extends React.Component {
     }
   }
 
-  _layerDidMount = (element) => {
+  @autobind
+  showResults(searchTerm) {
+    this.props.search(
+      this.props.options,
+      searchTerm.trim(),
+      this._onSearchComplete
+    );
+  }
+
+  @autobind
+  showAllResults() {
+    this.showResults('');
+    this._open();
+  }
+
+  @autobind
+  _onResultFocus(value) {
+    this.setState({focusedValue: value});
+  }
+
+  @autobind
+  _onListFocus() {
+    this._open();
+  }
+
+  @autobind
+  _onListBlur() {
+    this._close();
+  }
+
+  @autobind
+  _layerDidMount(element) {
     let target = React.findDOMNode(this.refs.search);
     let size = target.getBoundingClientRect();
     element.style.width = `${size.width}px`;
     this._tether = new Tether({element, target, ...TETHER_CONFIG});
   }
 
+  @autobind
   _setOpen(open) {
     this.setState({open});
   }
 
+  @autobind
   _open() {
     this._setOpenDebounced(true);
   }
 
+  @autobind
   _close() {
     this._setOpenDebounced(false);
   }
 
+  @autobind
   _searchTermFromProps(props) {
     let {searchTerm, value} = props;
     if (!searchTerm && value) {
@@ -190,27 +260,8 @@ export default class Selectbox extends React.Component {
     return searchTerm || '';
   }
 
-  /**
-    * Show results for a search term value.
-    *
-    * This method doesn't update search term value itself.
-    *
-    * @param {Search} searchTerm
-    */
-  showResults = (searchTerm) => {
-    this.props.search(
-      this.props.options,
-      searchTerm.trim(),
-      this.onSearchComplete
-    );
-  }
-
-  showAllResults = () => {
-    this.showResults('');
-    this._open();
-  }
-
-  onValueChange = (value) => {
+  @autobind
+  _onValueChange(value) {
     let state = {
       value: value,
       open: false
@@ -227,7 +278,8 @@ export default class Selectbox extends React.Component {
     }
   }
 
-  onSearchComplete = (err, results) => {
+  @autobind
+  _onSearchComplete(err, results) {
     if (err) {
       if (this.props.onError) {
         this.props.onError(err);
@@ -242,11 +294,8 @@ export default class Selectbox extends React.Component {
     });
   }
 
-  onValueFocus = (value) => {
-    this.setState({focusedValue: value});
-  }
-
-  onQueryChange = (e) => {
+  @autobind
+  _onQueryChange(e) {
     let searchTerm = e.target.value;
     this.setState({
       searchTerm: searchTerm,
@@ -255,49 +304,59 @@ export default class Selectbox extends React.Component {
     this.showResults(searchTerm);
   }
 
-  _onFocus = () => {
+  @autobind
+  _onFocus(e) {
     this.showAllResults();
+    this.props.onFocus(e);
   }
 
-  _onBlur = () => {
+  @autobind
+  _onBlur(e) {
     this._close();
+    this.props.onBlur(e);
   }
 
-  onQueryKeyDown = (e) => {
-
-    if (e.key === KEYS.ENTER) {
-      e.preventDefault();
-      if (this.state.focusedValue) {
-        this.onValueChange(this.state.focusedValue);
-      }
-
-    } else if (e.key === KEYS.ARROW_UP && this.state.open) {
-      e.preventDefault();
-      let prevIdx = Math.max(
-        this.focusedValueIndex() - 1,
-        0
-      );
-      this.setState({
-        focusedValue: this.state.results[prevIdx]
-      });
-
-    } else if (e.key === KEYS.ARROW_DOWN) {
-      e.preventDefault();
-      if (this.state.open) {
-        let nextIdx = Math.min(
-          this.focusedValueIndex() + (this.state.open ? 1 : 0),
-          this.state.results.length - 1
+  @autobind
+  _onQueryKeyDown(e) {
+    console.log('ooops');
+    let {open, focusedValue, results} = this.state;
+    switch (e.key) {
+      case KEYS.ENTER:
+        e.preventDefault();
+        if (focusedValue) {
+          this._onValueChange(focusedValue);
+        }
+        break;
+      case KEYS.ARROW_UP:
+        if (!open) {
+          break;
+        }
+        e.preventDefault();
+        let prevIdx = Math.max(
+          this._indexOfFocusedValue - 1,
+          0
         );
         this.setState({
-          focusedValue: this.state.results[nextIdx]
+          focusedValue: results[prevIdx]
         });
-      } else {
-        this.showAllResults();
-      }
+        break;
+      case KEYS.ARROW_DOWN:
+        e.preventDefault();
+        if (open) {
+          let nextIdx = Math.min(
+            this._indexOfFocusedValue + (open ? 1 : 0),
+            results.length - 1
+          );
+          this.setState({
+            focusedValue: results[nextIdx]
+          });
+        } else {
+          this.showAllResults();
+        }
     }
   }
 
-  focusedValueIndex() {
+  get _indexOfFocusedValue() {
     if (!this.state.focusedValue) {
       return -1;
     }

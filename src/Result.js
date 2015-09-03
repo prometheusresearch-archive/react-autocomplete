@@ -2,6 +2,7 @@
  * @copyright 2015, Prometheus Research, LLC
  */
 
+import autobind           from 'autobind-decorator';
 import React, {PropTypes} from 'react';
 import cx                 from 'classnames';
 
@@ -44,11 +45,13 @@ export default class Result extends React.Component {
     );
   }
 
-  onClick = () => {
+  @autobind
+  onClick() {
     this.props.onClick(this.props.result);
   }
 
-  onMouseEnter = (e) => {
+  @autobind
+  onMouseEnter(e) {
     if (this.props.onMouseEnter) {
       this.props.onMouseEnter(e, this.props.result);
     }

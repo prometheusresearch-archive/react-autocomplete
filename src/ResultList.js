@@ -2,10 +2,10 @@
  * @copyright 2015, Prometheus Research, LLC
  */
 
+import autobind           from 'autobind-decorator';
 import React, {PropTypes} from 'react';
 import cx                 from 'classnames';
 import Result             from './Result';
-
 
 export default class ResultList extends React.Component {
 
@@ -54,24 +54,25 @@ export default class ResultList extends React.Component {
       styleOnActive: this.props.styleResultOnActive,
       result: result,
       focused: focused,
-      onMouseEnter: this.onMouseEnterResult,
+      onMouseEnter: this._onResultMouseEnter,
       onClick: this.props.onSelect
     });
   }
 
   componentDidUpdate() {
-    this.scrollToFocused();
+    this._scrollToFocused();
   }
 
   componentDidMount() {
-    this.scrollToFocused();
+    this._scrollToFocused();
   }
 
   componentWillMount() {
-    this.ignoreFocus = false;
+    this._ignoreFocus = false;
   }
 
-  scrollToFocused = () => {
+  @autobind
+  _scrollToFocused() {
     let focused = this.refs && this.refs.focused;
     if (focused) {
       let containerNode = React.findDOMNode(this);
@@ -86,20 +87,21 @@ export default class ResultList extends React.Component {
       // the mouseover event triggered because of that won't have an
       // effect
       if (top < scroll) {
-        this.ignoreFocus = true;
+        this._ignoreFocus = true;
         containerNode.scrollTop = top;
       } else if (bottom - scroll > height) {
-        this.ignoreFocus = true;
+        this._ignoreFocus = true;
         containerNode.scrollTop = bottom - height;
       }
     }
   }
 
-  onMouseEnterResult = (e, result) => {
+  @autobind
+  _onResultMouseEnter(e, result) {
     // check if we need to prevent the next onFocus event because it was
     // probably caused by a mouseover due to scroll position change
-    if (this.ignoreFocus) {
-      this.ignoreFocus = false;
+    if (this._ignoreFocus) {
+      this._ignoreFocus = false;
     } else {
       // we need to make sure focused node is visible
       // for some reason mouse events fire on visible nodes due to
