@@ -1,16 +1,12 @@
 /**
  * @copyright 2015, Prometheus Research, LLC
  */
-'use strict';
 
-if (Object.assign === undefined) {
-  Object.assign = require('object-assign');
-}
 
-var React         = require('react/addons');
-var Autocomplete  = require('../lib/themes/Bootstrap');
+import React        from 'react/addons';
+import Autocomplete from '../src/themes/Bootstrap';
 
-var Example = React.createClass({
+export default class Demo extends React.Component {
 
   render() {
     return (
@@ -30,8 +26,4 @@ var Example = React.createClass({
       </div>
     );
   }
-});
-
-React.render(
-  <Example />,
-  document.getElementById('main'));
+}
