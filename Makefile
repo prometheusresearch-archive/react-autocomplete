@@ -10,6 +10,9 @@ NODE          = $(BIN)/babel-node $(BABEL_OPTIONS)
 build:
 	@$(MAKE) -j 8 $(LIB)
 
+example::
+	@$(BIN)/heatpack ./example/index.js
+
 lint:
 	@$(BIN)/eslint src
 
