@@ -5,7 +5,7 @@
 import autobind           from 'autobind-decorator';
 import React, {PropTypes} from 'react';
 import debounce           from 'lodash/function/debounce';
-import {Styled}           from '@prometheusresearch/react-stylesheet';
+import ReactStylesheet    from '@prometheusresearch/react-stylesheet';
 import cx                 from 'classnames';
 import emptyFunction      from 'empty/function';
 import Tether             from 'tether';
@@ -32,7 +32,7 @@ const TETHER_CONFIG = {
   ]
 };
 
-@Styled
+@ReactStylesheet
 export default class Selectbox extends React.Component {
 
   static propTypes = {
@@ -119,6 +119,7 @@ export default class Selectbox extends React.Component {
   }
 
   render() {
+    console.log(this.stylesheet);
     let {placeholder, resultRenderer, ...props} = this.props;
     let {open} = this.state;
     let {Root, Input, ResultList} = this.stylesheet;

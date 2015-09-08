@@ -4,11 +4,11 @@
 
 import autobind           from 'autobind-decorator';
 import React, {PropTypes} from 'react';
-import {Styled}           from '@prometheusresearch/react-stylesheet';
+import ReactStylesheet    from '@prometheusresearch/react-stylesheet';
 import cx                 from 'classnames';
 import Result             from './Result';
 
-@Styled
+@ReactStylesheet
 export default class ResultList extends React.Component {
 
   static propTypes = {
