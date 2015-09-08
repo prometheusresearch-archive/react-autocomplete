@@ -27,6 +27,8 @@ export default Selectbox.style({
   ResultList: {
     Root: {
       width: '100%',
+      maxHeight: '200px',
+      overflow: 'auto',
       minWidth: '160px',
       padding: '5px 0',
       fontSize: '14px',
