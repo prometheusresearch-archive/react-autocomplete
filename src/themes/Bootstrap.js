@@ -38,7 +38,10 @@ export default Selectbox.style({
       backgroundClip: 'padding-box',
       border: '1px solid rgba(0,0,0,.15)',
       borderRadius: '4px',
-      boxShadow: '0 6px 12px rgba(0,0,0,.175)'
+      boxShadow: '0 6px 12px rgba(0,0,0,.175)',
+      focus: {
+        outline: 'none'
+      }
     },
     Result: {
       Root: {
@@ -49,6 +52,8 @@ export default Selectbox.style({
         lineHeight: '1.42857143',
         color: '#333',
         whiteSpace: 'nowrap',
+        userSelect: 'none',
+        WebkitUserSelect: 'none',
         focus: {
           color: '#262626',
           textDecoration: 'none',
