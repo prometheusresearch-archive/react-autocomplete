@@ -22,6 +22,11 @@ export default class ResultList extends React.Component {
     Result: Result
   };
 
+  constructor(props) {
+    super(props);
+    this._ignoreFocus = false;
+  }
+
   render() {
     let {results, ...props} = this.props;
     let {Root} = this.stylesheet;
@@ -54,15 +59,11 @@ export default class ResultList extends React.Component {
   }
 
   componentDidMount() {
-    this._scrollToFocused();
-  }
-
-  componentWillMount() {
-    this._ignoreFocus = false;
+    this._scrollToFocused(false);
   }
 
   @autobind
-  _scrollToFocused() {
+  _scrollToFocused(ignoreFocusOnScroll = true) {
     let focus = this.refs && this.refs.focus;
     if (focus) {
       let containerNode = React.findDOMNode(this);
@@ -77,10 +78,10 @@ export default class ResultList extends React.Component {
       // the mouseover event triggered because of that won't have an
       // effect
       if (top < scroll) {
-        this._ignoreFocus = true;
+        this._ignoreFocus = ignoreFocusOnScroll;
         containerNode.scrollTop = top;
       } else if (bottom - scroll > height) {
-        this._ignoreFocus = true;
+        this._ignoreFocus = ignoreFocusOnScroll;
         containerNode.scrollTop = bottom - height;
       }
     }
