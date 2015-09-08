@@ -84,6 +84,7 @@ export default class Selectbox extends React.Component {
 
   static defaultProps = {
     search: searchArray,
+    onClick: emptyFunction,
     onFocus: emptyFunction,
     onBlur: emptyFunction
   };
@@ -127,6 +128,7 @@ export default class Selectbox extends React.Component {
         <Input
           ref="search"
           style={{width: '100%'}}
+          onClick={this._onClick}
           onFocus={this._onFocus}
           onBlur={this._onBlur}
           placeholder={placeholder}
@@ -263,6 +265,12 @@ export default class Selectbox extends React.Component {
       focusedValue: null
     });
     this.showResults(searchTerm);
+  }
+
+  @autobind
+  _onClick(e) {
+    this.showAllResults();
+    this.props.onClick(e); // eslint-disable-line react/prop-types
   }
 
   @autobind
