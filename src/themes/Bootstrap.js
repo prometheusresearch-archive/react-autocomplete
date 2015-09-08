@@ -2,10 +2,7 @@
  * @copyright 2015, Prometheus Research, LLC
  */
 
-import React          from 'react';
-import Selectbox      from '../Selectbox';
-import ResultList     from '../ResultList';
-import Result         from '../Result';
+import Selectbox from '../Selectbox';
 
 export default Selectbox.style({
   Input: {

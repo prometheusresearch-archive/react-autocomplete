@@ -6,7 +6,6 @@ import autobind           from 'autobind-decorator';
 import React, {PropTypes} from 'react';
 import debounce           from 'lodash/function/debounce';
 import ReactStylesheet    from '@prometheusresearch/react-stylesheet';
-import cx                 from 'classnames';
 import emptyFunction      from 'empty/function';
 import Tether             from 'tether';
 import Layer              from './Layer';
@@ -274,51 +273,54 @@ export default class Selectbox extends React.Component {
   @autobind
   _onFocus(e) {
     this.showAllResults();
-    this.props.onFocus(e);
+    this.props.onFocus(e); // eslint-disable-line react/prop-types
   }
 
   @autobind
   _onBlur(e) {
     this._close();
-    this.props.onBlur(e);
+    this.props.onBlur(e); // eslint-disable-line react/prop-types
   }
 
   @autobind
   _onQueryKeyDown(e) {
     let {open, focusedValue, results} = this.state;
     switch (e.key) {
-      case KEYS.ENTER:
-        e.preventDefault();
-        if (focusedValue) {
-          this._onValueChange(focusedValue);
-        }
+    case KEYS.ENTER:
+      e.preventDefault();
+      if (focusedValue) {
+        this._onValueChange(focusedValue);
+      }
+      break;
+    case KEYS.ARROW_UP:
+      if (!open) {
         break;
-      case KEYS.ARROW_UP:
-        if (!open) {
-          break;
-        }
-        e.preventDefault();
-        let prevIdx = Math.max(
-          this._indexOfFocusedValue - 1,
-          0
+      }
+      e.preventDefault();
+      let prevIdx = Math.max(
+        this._indexOfFocusedValue - 1,
+        0
+      );
+      this.setState({
+        focusedValue: results[prevIdx]
+      });
+      break;
+    case KEYS.ARROW_DOWN:
+      e.preventDefault();
+      if (open) {
+        let nextIdx = Math.min(
+          this._indexOfFocusedValue + (open ? 1 : 0),
+          results.length - 1
         );
         this.setState({
-          focusedValue: results[prevIdx]
+          focusedValue: results[nextIdx]
         });
-        break;
-      case KEYS.ARROW_DOWN:
-        e.preventDefault();
-        if (open) {
-          let nextIdx = Math.min(
-            this._indexOfFocusedValue + (open ? 1 : 0),
-            results.length - 1
-          );
-          this.setState({
-            focusedValue: results[nextIdx]
-          });
-        } else {
-          this.showAllResults();
-        }
+      } else {
+        this.showAllResults();
+      }
+      break;
+    default:
+      break;
     }
   }
 

@@ -5,7 +5,6 @@
 import autobind           from 'autobind-decorator';
 import React, {PropTypes} from 'react';
 import ReactStylesheet    from '@prometheusresearch/react-stylesheet';
-import cx                 from 'classnames';
 import Result             from './Result';
 
 @ReactStylesheet
@@ -28,7 +27,7 @@ export default class ResultList extends React.Component {
   };
 
   render() {
-    let {results, style, styleResult, className, ...props} = this.props;
+    let {results, style, styleResult, ...props} = this.props;
     let {Root} = this.stylesheet;
     style = {
       display: 'block',
@@ -36,9 +35,8 @@ export default class ResultList extends React.Component {
       listStyleType: 'none',
       boxSizing: 'border-box'
     };
-    className = cx('react-selectbox-ResultList', className);
     return (
-      <Root {...props} tabIndex={-1} style={style} className={className}>
+      <Root {...props} tabIndex={-1} style={style}>
         {results.map(this.renderResult, this)}
       </Root>
     );
