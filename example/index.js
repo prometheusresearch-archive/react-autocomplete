@@ -20,6 +20,11 @@ let colors = {
 
 };
 
+let options = []
+for (let i = 5; i < 100; i++) {
+  options.push({id: i, title: `Ok ${i}`});
+}
+
 let styled = stylesheet({
 
   default: {
@@ -122,7 +127,7 @@ export default class Example extends React.Component {
                   {id: 2, title: 'Second'},
                   {id: 3, title: 'Third'},
                   {id: 4, title: 'Forth'}
-                ]}
+                ].concat(options)}
                 />
             </styled.demo>
           </styled.pane>
