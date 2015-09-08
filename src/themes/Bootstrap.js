@@ -26,15 +26,9 @@ export default Selectbox.style({
   },
   ResultList: {
     Root: {
-      position: 'absolute',
-      top: '100%',
       width: '100%',
-      left: '0',
-      zIndex: '1000',
-      float: 'left',
       minWidth: '160px',
       padding: '5px 0',
-      margin: '2px 0 0',
       fontSize: '14px',
       textAlign: 'left',
       listStyle: 'none',
