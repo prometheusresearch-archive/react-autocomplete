@@ -60,11 +60,6 @@ export default class Selectbox extends React.Component {
     search: PropTypes.func,
 
     /**
-     * React component which is used to render a single result in result list.
-     */
-    resultRenderer: PropTypes.element,
-
-    /**
      * Value.
      *
      * Should be an object with `title` attribute.
@@ -118,7 +113,7 @@ export default class Selectbox extends React.Component {
   }
 
   render() {
-    let {placeholder, resultRenderer, ...props} = this.props;
+    let {placeholder, ...props} = this.props;
     let {open} = this.state;
     let {Root, Input, ResultList} = this.stylesheet;
     return (
