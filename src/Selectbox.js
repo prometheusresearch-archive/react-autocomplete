@@ -119,7 +119,6 @@ export default class Selectbox extends React.Component {
   }
 
   render() {
-    console.log(this.stylesheet);
     let {placeholder, resultRenderer, ...props} = this.props;
     let {open} = this.state;
     let {Root, Input, ResultList} = this.stylesheet;
@@ -286,7 +285,6 @@ export default class Selectbox extends React.Component {
 
   @autobind
   _onQueryKeyDown(e) {
-    console.log('ooops');
     let {open, focusedValue, results} = this.state;
     switch (e.key) {
       case KEYS.ENTER:
