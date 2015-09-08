@@ -10,9 +10,7 @@ import ReactStylesheet    from '@prometheusresearch/react-stylesheet';
 export default class Result extends React.Component {
 
   static propTypes = {
-    focused: PropTypes.bool,
-    style: PropTypes.object,
-    styleOnActive: PropTypes.object,
+    focus: PropTypes.bool,
     result: PropTypes.object,
     onClick: PropTypes.func,
     onMouseEnter: PropTypes.func,
@@ -23,15 +21,11 @@ export default class Result extends React.Component {
   };
 
   render() {
-    let {focused, style, styleOnActive, result, ...props} = this.props;
+    let {focus, result, ...props} = this.props;
     let {Root} = this.stylesheet;
-    style = {
-      ...style,
-      ...(focused ? styleOnActive : null)
-    };
     return (
       <Root
-        state={{focus: focused}}
+        state={{focus: focus}}
         onClick={this.onClick}
         onMouseEnter={this.onMouseEnter}>
         {this.props.result.title}
@@ -42,7 +36,7 @@ export default class Result extends React.Component {
   shouldComponentUpdate(nextProps) {
     return (
       nextProps.result.id != this.props.result.id || // eslint-disable-line eqeqeq
-      nextProps.focused !== this.props.focused
+      nextProps.focus !== this.props.focus
     );
   }
 

@@ -12,9 +12,6 @@ export default class ResultList extends React.Component {
 
   static propTypes = {
     results: PropTypes.array,
-    style: PropTypes.object,
-    styleResult: PropTypes.object,
-    styleResultOnActive: PropTypes.object,
     focusedValue: PropTypes.object,
     onResultFocus: PropTypes.func,
     onSelect: PropTypes.func,
@@ -26,34 +23,26 @@ export default class ResultList extends React.Component {
   };
 
   render() {
-    let {results, style, styleResult, ...props} = this.props;
+    let {results, ...props} = this.props;
     let {Root} = this.stylesheet;
-    style = {
-      display: 'block',
-      position: 'absolute',
-      listStyleType: 'none',
-      boxSizing: 'border-box'
-    };
     return (
-      <Root {...props} tabIndex={-1} style={style}>
+      <Root {...props} tabIndex={-1}>
         {results.map(this.renderResult, this)}
       </Root>
     );
   }
 
   renderResult(result) {
-    let focused = (
+    let focus = (
       this.props.focusedValue &&
       this.props.focusedValue.id === result.id
     );
     return (
       <this.stylesheet.Result
-        ref={focused ? 'focused' : undefined}
+        ref={focus ? 'focus' : undefined}
         key={result.id}
-        style={this.props.styleResult}
-        styleOnActive={this.props.styleResultOnActive}
         result={result}
-        focused={focused}
+        focus={focus}
         onMouseEnter={this._onResultMouseEnter}
         onClick={this.props.onSelect}
         />
@@ -74,13 +63,13 @@ export default class ResultList extends React.Component {
 
   @autobind
   _scrollToFocused() {
-    let focused = this.refs && this.refs.focused;
-    if (focused) {
+    let focus = this.refs && this.refs.focus;
+    if (focus) {
       let containerNode = React.findDOMNode(this);
       let scroll = containerNode.scrollTop;
       let height = containerNode.offsetHeight;
 
-      let node = React.findDOMNode(focused);
+      let node = React.findDOMNode(focus);
       let top = node.offsetTop;
       let bottom = top + node.offsetHeight;
 
