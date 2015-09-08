@@ -4,7 +4,6 @@
 
 import autobind           from 'autobind-decorator';
 import React, {PropTypes} from 'react';
-import cx                 from 'classnames';
 import ReactStylesheet    from '@prometheusresearch/react-stylesheet';
 
 @ReactStylesheet
@@ -26,10 +25,6 @@ export default class Result extends React.Component {
   render() {
     let {focused, style, styleOnActive, result, ...props} = this.props;
     let {Root} = this.stylesheet;
-    let className = cx({
-      'react-selectbox-Result': true,
-      'react-selectbox-Result--active': this.props.focused
-    });
     style = {
       ...style,
       ...(focused ? styleOnActive : null)
@@ -37,7 +32,6 @@ export default class Result extends React.Component {
     return (
       <Root
         state={{focus: focused}}
-        className={className}
         onClick={this.onClick}
         onMouseEnter={this.onMouseEnter}>
         {this.props.result.title}

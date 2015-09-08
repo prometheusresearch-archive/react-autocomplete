@@ -15,7 +15,6 @@ export default class ResultList extends React.Component {
     style: PropTypes.object,
     styleResult: PropTypes.object,
     styleResultOnActive: PropTypes.object,
-    className: PropTypes.string,
     focusedValue: PropTypes.object,
     onResultFocus: PropTypes.func,
     onSelect: PropTypes.func,
