@@ -7,7 +7,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import './index.css';
 
 import React            from 'react';
-import Stylesheet       from '@prometheusresearch/react-stylesheet';
+import {stylesheet}     from '@prometheusresearch/react-stylesheet';
 import DateTimeField    from '../src';
 import Selectbox        from '../src/themes/Bootstrap';
 
@@ -20,7 +20,7 @@ let colors = {
 
 };
 
-let styled = Stylesheet({
+let styled = stylesheet({
 
   default: {
     boxSizing: 'border-box',
@@ -54,6 +54,7 @@ let styled = Stylesheet({
   },
 
   footer: {
+    position: 'relative',
     boxShadow: '0px 3px 10px rgba(58, 58, 58, 0.39)',
     height: 80,
     backgroundColor: colors.base1,

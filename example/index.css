@@ -4,3 +4,7 @@ html, body, #app {
   height: 100%;
   font-family: 'Source Sans Pro';
 }
+
+* {
+  box-sizing: border-box;
+}

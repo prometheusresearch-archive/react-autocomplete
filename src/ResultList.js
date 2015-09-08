@@ -4,9 +4,11 @@
 
 import autobind           from 'autobind-decorator';
 import React, {PropTypes} from 'react';
+import {Styled}           from '@prometheusresearch/react-stylesheet';
 import cx                 from 'classnames';
 import Result             from './Result';
 
+@Styled
 export default class ResultList extends React.Component {
 
   static propTypes = {
@@ -18,17 +20,17 @@ export default class ResultList extends React.Component {
     focusedValue: PropTypes.object,
     onResultFocus: PropTypes.func,
     onSelect: PropTypes.func,
-    renderer: PropTypes.func,
   };
 
-  static defaultProps = {
-    renderer: Result
+  static stylesheet = {
+    Root: 'ul',
+    Result: Result
   };
 
   render() {
     let {results, style, styleResult, className, ...props} = this.props;
+    let {Root} = this.stylesheet;
     style = {
-      ...style,
       display: 'block',
       position: 'absolute',
       listStyleType: 'none',
@@ -36,9 +38,9 @@ export default class ResultList extends React.Component {
     };
     className = cx('react-selectbox-ResultList', className);
     return (
-      <ul {...props} tabIndex={-1} style={style} className={className}>
+      <Root {...props} tabIndex={-1} style={style} className={className}>
         {results.map(this.renderResult, this)}
-      </ul>
+      </Root>
     );
   }
 
@@ -47,16 +49,18 @@ export default class ResultList extends React.Component {
       this.props.focusedValue &&
       this.props.focusedValue.id === result.id
     );
-    return React.createElement(this.props.renderer, {
-      ref: focused ? 'focused' : undefined,
-      key: result.id,
-      style: this.props.styleResult,
-      styleOnActive: this.props.styleResultOnActive,
-      result: result,
-      focused: focused,
-      onMouseEnter: this._onResultMouseEnter,
-      onClick: this.props.onSelect
-    });
+    return (
+      <this.stylesheet.Result
+        ref={focused ? 'focused' : undefined}
+        key={result.id}
+        style={this.props.styleResult}
+        styleOnActive={this.props.styleResultOnActive}
+        result={result}
+        focused={focused}
+        onMouseEnter={this._onResultMouseEnter}
+        onClick={this.props.onSelect}
+        />
+    );
   }
 
   componentDidUpdate() {

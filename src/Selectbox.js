@@ -5,6 +5,7 @@
 import autobind           from 'autobind-decorator';
 import React, {PropTypes} from 'react';
 import debounce           from 'lodash/function/debounce';
+import {Styled}           from '@prometheusresearch/react-stylesheet';
 import cx                 from 'classnames';
 import emptyFunction      from 'empty/function';
 import Tether             from 'tether';
@@ -31,6 +32,7 @@ const TETHER_CONFIG = {
   ]
 };
 
+@Styled
 export default class Selectbox extends React.Component {
 
   static propTypes = {
@@ -81,21 +83,9 @@ export default class Selectbox extends React.Component {
     onError: PropTypes.func,
 
     /**
-     * Extra CSS class name
-     */
-    className: PropTypes.string,
-
-    /**
      * Input placeholder.
      */
-    placeholder: PropTypes.string,
-
-    style: PropTypes.object,
-    styleOnResultsShown: PropTypes.object,
-    styleInput: PropTypes.object,
-    styleResultList: PropTypes.object,
-    styleResult: PropTypes.object,
-    styleResultOnActive: PropTypes.object
+    placeholder: PropTypes.string
   };
 
   static defaultProps = {
@@ -104,17 +94,17 @@ export default class Selectbox extends React.Component {
     onBlur: emptyFunction
   };
 
-  static style = {
-    base: {
+  static stylesheet = {
+    Root: {
       position: 'relative',
       outline: 'none',
-      boxSizing: 'border-box'
     },
-    input: {
+    Input: {
+      Component: 'input',
       width: '100%',
-      boxSizing: 'border-box'
     },
-  }
+    ResultList: ResultList,
+  };
 
   constructor(props) {
     super(props);
@@ -129,43 +119,25 @@ export default class Selectbox extends React.Component {
   }
 
   render() {
-    let {
-      className, placeholder, resultRenderer,
-      style, styleOnResultsShown, styleInput, styleResultList,
-      styleResult, styleResultOnActive,
-      ...props
-    } = this.props;
+    let {placeholder, resultRenderer, ...props} = this.props;
     let {open} = this.state;
-    className = cx(
-      className,
-      'react-selectbox-Selectbox',
-      open ?
-        'react-selectbox-Selectbox--resultsShown' :
-        null
-    );
+    let {Root, Input, ResultList} = this.stylesheet;
     return (
-      <div
+      <Root
         {...props}
         value={undefined}
         search={undefined}
         onChange={undefined}
         onError={undefined}
-        options={undefined}
-        className={className}
-        style={{
-          ...style,
-          ...(open ? styleOnResultsShown : null),
-          ...this.constructor.style.base
-        }}>
-        <input
+        options={undefined}>
+        <Input
           ref="search"
+          style={{width: '100%'}}
           onFocus={this._onFocus}
           onBlur={this._onBlur}
-          className="react-selectbox-Selectbox__search"
           placeholder={placeholder}
           onChange={this._onQueryChange}
           onKeyDown={this._onQueryKeyDown}
-          style={{...styleInput, ...this.constructor.style.input}}
           value={this.state.searchTerm}
           />
         {open &&
@@ -177,17 +149,12 @@ export default class Selectbox extends React.Component {
               onFocus={this._onListFocus}
               onBlur={this._onListBlur}
               onResultFocus={this._onResultFocus}
-              className="react-selectbox-Selectbox__results"
               onSelect={this._onValueChange}
               results={this.state.results}
               focusedValue={this.state.focusedValue}
-              renderer={resultRenderer}
-              style={styleResultList}
-              styleResult={styleResult}
-              styleResultOnActive={styleResultOnActive}
               />
           </Layer>}
-      </div>
+      </Root>
     );
   }
 
