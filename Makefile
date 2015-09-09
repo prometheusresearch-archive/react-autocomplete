@@ -33,7 +33,7 @@ publish: build
 	@npm publish
 
 clean:
-	@rm -f $(LIB)
+	@rm -rf ./lib
 
 lib/%: src/%
 	@echo "Building $<"

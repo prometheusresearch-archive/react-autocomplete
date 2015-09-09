@@ -1,7 +1,7 @@
 {
-  "name": "react-selectbox",
-  "version": "1.1.0",
-  "description": "Selectbox (with autocompletion) component for React",
+  "name": "@prometheusresearch/react-autocomplete",
+  "version": "0.1.0",
+  "description": "Autocomplete component for React",
   "main": "lib/index.js",
   "scripts": {
     "test": "make test"
@@ -9,13 +9,13 @@
   "rex": {},
   "repository": {
     "type": "git",
-    "url": "git://github.com/prometheusresearch/react-selectbox.git"
+    "url": "git://github.com/prometheusresearch/react-autocomplete.git"
   },
   "keywords": [
     "autocomplete",
     "react",
     "react-component",
-    "selectbox"
+    "autocomplete"
   ],
   "dependencies": {
     "@prometheusresearch/react-stylesheet": "^0.2.0",
@@ -48,7 +48,7 @@
   "author": "Prometheus Research",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/prometheusresearch/react-selectbox/issues"
+    "url": "https://github.com/prometheusresearch/react-autocomplete/issues"
   },
-  "homepage": "https://github.com/prometheusresearch/react-selectbox"
+  "homepage": "https://github.com/prometheusresearch/react-autocomplete"
 }

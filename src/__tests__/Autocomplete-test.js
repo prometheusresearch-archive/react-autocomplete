@@ -11,15 +11,15 @@ var React        = require('react');
 var assert       = require('assert');
 var sinon        = require('sinon');
 var TestUtils    = require('react/lib/ReactTestUtils');
-var Selectbox    = require('../Selectbox');
+var Autocomplete = require('../Autocomplete');
 var ResultList   = require('../ResultList');
 
 var options      = require('./fixture.json');
 
-describe('Selectbox', function() {
+describe('Autocomplete', function() {
 
   function createAndMount(props) {
-    var component = <Selectbox {...props} />;
+    var component = <Autocomplete {...props} />;
     return TestUtils.renderIntoDocument(component);
   }
 
@@ -69,7 +69,7 @@ describe('Selectbox', function() {
   it('should have "react-selectbox" class', function() {
     var component = createAndMount({options: options});
     var classes = component.getDOMNode().classList;
-    assert.equal(classes.contains('react-selectbox-Selectbox'), true);
+    assert.equal(classes.contains('react-selectbox-Autocomplete'), true);
   });
 
   it('should allow setting initial value via "value" prop', function() {

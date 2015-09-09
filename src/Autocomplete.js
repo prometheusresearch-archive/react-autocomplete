@@ -33,12 +33,12 @@ const TETHER_CONFIG = {
 };
 
 @ReactStylesheet
-export default class Selectbox extends React.Component {
+export default class Autocomplete extends React.Component {
 
   static propTypes = {
 
     /**
-     * Option object is opaque to <Selectbox /> component.
+     * Option object is opaque to <Autocomplete /> component.
      *
      * It is passed to `search` function (also passed as props) along with
      * the current `searchTerm` to return a list of results.
@@ -53,10 +53,10 @@ export default class Selectbox extends React.Component {
      *
      * It accepts three arguments: `options`, `searchTerm` and `cb`:
      *
-     * * `options` is the `options` prop passed to <Selectbox />.
+     * * `options` is the `options` prop passed to <Autocomplete />.
      * * `searchTerm` is the current value of input
      * * `cb` is a Node-style callback which should be used to return results
-     *   back to <Selectbox />
+     *   back to <Autocomplete />
      */
     search: PropTypes.func,
 

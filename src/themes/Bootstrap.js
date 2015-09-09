@@ -2,9 +2,9 @@
  * @copyright 2015, Prometheus Research, LLC
  */
 
-import Selectbox from '../Selectbox';
+import Autocomplete from '../Autocomplete';
 
-export default Selectbox.style({
+export default Autocomplete.style({
   Input: {
     display: 'block',
     height: '34px',

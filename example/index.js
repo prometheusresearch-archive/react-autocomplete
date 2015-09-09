@@ -9,7 +9,7 @@ import './index.css';
 import React            from 'react';
 import {stylesheet}     from '@prometheusresearch/react-stylesheet';
 import DateTimeField    from '../src';
-import Selectbox        from '../src/themes/Bootstrap';
+import Autocomplete     from '../src/themes/Bootstrap';
 
 let colors = {
   brand0: 'rgb(1, 60, 154)',
@@ -105,14 +105,14 @@ export default class Example extends React.Component {
         <styled.content>
           <styled.pane>
 
-            <styled.header>React Selectbox</styled.header>
+            <styled.header>React Autocomplete</styled.header>
 
             <styled.demo>
               <p>
                 Basic usage:   
               </p>
               <styled.code>
-{`<Selectbox
+{`<Autocomplete
   options={[
     {id: 1, title: 'First'},
     {id: 2, title: 'Second'},
@@ -121,7 +121,7 @@ export default class Example extends React.Component {
   ]}
   />`}
               </styled.code>
-              <Selectbox
+              <Autocomplete
                 options={[
                   {id: 1, title: 'First'},
                   {id: 2, title: 'Second'},
