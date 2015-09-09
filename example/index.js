@@ -9,7 +9,7 @@ import './index.css';
 import React            from 'react';
 import {stylesheet}     from '@prometheusresearch/react-stylesheet';
 import DateTimeField    from '../src';
-import Autocomplete     from '../src/themes/Bootstrap';
+import Autocomplete     from '../src/themed/Bootstrap';
 
 let colors = {
   brand0: 'rgb(1, 60, 154)',
