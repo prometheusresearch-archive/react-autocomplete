@@ -25,12 +25,12 @@ ci:
 test-coverage:
 	@NODE_ENV=test $(NODE) $(BIN)/isparta cover $(BIN)/_mocha -- $(TESTS)
 
-version-major version-minor version-patch: lint test
+version-major version-minor version-patch: lint
 	@npm version $(@:version-%=%)
 
 publish: build
 	@git push --tags origin HEAD:master
-	@npm publish
+	@npm publish --access public
 
 clean:
 	@rm -rf ./lib
