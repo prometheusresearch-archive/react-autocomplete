@@ -104,6 +104,7 @@ export default class Selectbox extends React.Component {
 
   constructor(props) {
     super(props);
+    this._ignoreFocus = false;
     this._tether = null;
     this._setOpenDebounced = debounce(this._setOpen, 0);
     this.state = {
@@ -137,7 +138,7 @@ export default class Selectbox extends React.Component {
           onChange={this._onQueryChange}
           value={this.state.searchTerm}
           />
-        {open &&
+        {open && this.state.results.length > 0 &&
           <Layer
             didMount={this._layerDidMount}
             didUpdate={this._layerDidUpdate}
@@ -146,7 +147,6 @@ export default class Selectbox extends React.Component {
               onKeyDown={this._onQueryKeyDown}
               onFocus={this._onListFocus}
               onBlur={this._onListBlur}
-              onResultFocus={this._onResultFocus}
               onSelect={this._onValueChange}
               results={this.state.results}
               focusedValue={this.state.focusedValue}
@@ -179,18 +179,33 @@ export default class Selectbox extends React.Component {
   }
 
   @autobind
-  _onResultFocus(value) {
-    this.setState({focusedValue: value});
+  _onFocus(e) {
+    if (!this._ignoreFocus && !this.state.open) {
+      this.showAllResults();
+    }
+    this.props.onFocus(e); // eslint-disable-line react/prop-types
+  }
+
+  @autobind
+  _onBlur(e) {
+    if (!this._ignoreFocus) {
+      this._close();
+    }
+    this.props.onBlur(e); // eslint-disable-line react/prop-types
   }
 
   @autobind
   _onListFocus() {
-    this._open();
+    if (!this._ignoreFocus) {
+      this._open();
+    }
   }
 
   @autobind
   _onListBlur() {
-    this._close();
+    if (!this._ignoreFocus) {
+      this._close();
+    }
   }
 
   @autobind
@@ -217,6 +232,20 @@ export default class Selectbox extends React.Component {
   }
 
   @autobind
+  _focus() {
+    this._ignoreFocus = true;
+    React.findDOMNode(this.refs.search).focus();
+    this.setState({focusedValue: null});
+    this._ignoreFocus = false;
+  }
+
+  @autobind
+  _focusAndClose() {
+    this._focus();
+    this._close();
+  }
+
+  @autobind
   _searchTermFromProps(props) {
     let {searchTerm, value} = props;
     if (!searchTerm && value) {
@@ -227,17 +256,11 @@ export default class Selectbox extends React.Component {
 
   @autobind
   _onValueChange(value) {
-    let state = {
+    this.setState({
       value: value,
-      open: false,
       focusedValue: value,
-    };
-
-    if (value) {
-      state.searchTerm = value.title;
-    }
-
-    this.setState(state);
+      searchTerm: value ? value.title : this.state.searchTerm,
+    }, this._focusAndClose);
 
     if (this.props.onChange) {
       this.props.onChange(value);
@@ -272,20 +295,10 @@ export default class Selectbox extends React.Component {
 
   @autobind
   _onClick(e) {
-    this.showAllResults();
+    if (!this.state.open) {
+      this.showAllResults();
+    }
     this.props.onClick(e); // eslint-disable-line react/prop-types
-  }
-
-  @autobind
-  _onFocus(e) {
-    this.showAllResults();
-    this.props.onFocus(e); // eslint-disable-line react/prop-types
-  }
-
-  @autobind
-  _onBlur(e) {
-    this._close();
-    this.props.onBlur(e); // eslint-disable-line react/prop-types
   }
 
   @autobind
@@ -294,12 +307,10 @@ export default class Selectbox extends React.Component {
     switch (e.key) {
     case KEYS.ENTER:
       e.preventDefault();
-      if (focusedValue) {
-        this._onValueChange(focusedValue);
-      }
+      this._onValueChange(focusedValue);
       break;
     case KEYS.ESCAPE:
-      this._close();
+      this._focusAndClose();
       break;
     case KEYS.ARROW_UP:
       if (!open) {
@@ -308,22 +319,32 @@ export default class Selectbox extends React.Component {
       e.preventDefault();
       let prevIdx = Math.max(
         this._indexOfFocusedValue - 1,
-        0
+        -1
       );
-      this.setState({
-        focusedValue: results[prevIdx]
-      });
+      if (prevIdx === -1) {
+        this._focus();
+      } else {
+        this.setState({
+          searchTerm: results[prevIdx].title,
+          focusedValue: results[prevIdx],
+        });
+      }
       break;
     case KEYS.ARROW_DOWN:
       e.preventDefault();
       if (open) {
         let nextIdx = Math.min(
           this._indexOfFocusedValue + (open ? 1 : 0),
-          results.length - 1
+          results.length
         );
-        this.setState({
-          focusedValue: results[nextIdx]
-        });
+        if (nextIdx === results.length) {
+          this._focus();
+        } else {
+          this.setState({
+            searchTerm: results[nextIdx].title,
+            focusedValue: results[nextIdx]
+          });
+        }
       } else {
         this.showAllResults();
       }

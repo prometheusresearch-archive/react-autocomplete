@@ -13,7 +13,6 @@ export default class ResultList extends React.Component {
   static propTypes = {
     results: PropTypes.array,
     focusedValue: PropTypes.object,
-    onResultFocus: PropTypes.func,
     onSelect: PropTypes.func,
   };
 
