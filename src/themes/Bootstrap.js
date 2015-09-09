@@ -58,6 +58,11 @@ export default Selectbox.style({
           color: '#262626',
           textDecoration: 'none',
           backgroundColor: '#f5f5f5'
+        },
+        hover: {
+          color: '#262626',
+          textDecoration: 'none',
+          backgroundColor: '#f5f5f5'
         }
       }
     }

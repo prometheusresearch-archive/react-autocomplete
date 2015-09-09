@@ -227,7 +227,8 @@ export default class Selectbox extends React.Component {
   _onValueChange(value) {
     let state = {
       value: value,
-      open: false
+      open: false,
+      focusedValue: value,
     };
 
     if (value) {
