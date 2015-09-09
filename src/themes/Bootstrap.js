@@ -55,6 +55,7 @@ export default Selectbox.style({
         userSelect: 'none',
         WebkitUserSelect: 'none',
         focus: {
+          outline: 'none',
           color: '#262626',
           textDecoration: 'none',
           backgroundColor: '#f5f5f5'

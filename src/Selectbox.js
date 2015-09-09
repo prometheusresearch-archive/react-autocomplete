@@ -14,7 +14,8 @@ import ResultList         from './ResultList';
 const KEYS = {
   ARROW_UP: 'ArrowUp',
   ARROW_DOWN: 'ArrowDown',
-  ENTER: 'Enter'
+  ENTER: 'Enter',
+  ESCAPE: 'Escape',
 };
 
 const TETHER_CONFIG = {
@@ -128,12 +129,12 @@ export default class Selectbox extends React.Component {
         <Input
           ref="search"
           style={{width: '100%'}}
+          onKeyDown={this._onQueryKeyDown}
           onClick={this._onClick}
           onFocus={this._onFocus}
           onBlur={this._onBlur}
           placeholder={placeholder}
           onChange={this._onQueryChange}
-          onKeyDown={this._onQueryKeyDown}
           value={this.state.searchTerm}
           />
         {open &&
@@ -142,6 +143,7 @@ export default class Selectbox extends React.Component {
             didUpdate={this._layerDidUpdate}
             willUnmount={this._layerWillUnmount}>
             <ResultList
+              onKeyDown={this._onQueryKeyDown}
               onFocus={this._onListFocus}
               onBlur={this._onListBlur}
               onResultFocus={this._onResultFocus}
@@ -295,6 +297,9 @@ export default class Selectbox extends React.Component {
       if (focusedValue) {
         this._onValueChange(focusedValue);
       }
+      break;
+    case KEYS.ESCAPE:
+      this._close();
       break;
     case KEYS.ARROW_UP:
       if (!open) {

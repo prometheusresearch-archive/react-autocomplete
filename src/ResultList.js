@@ -64,6 +64,7 @@ export default class ResultList extends React.Component {
       let container = React.findDOMNode(this);
       let node = React.findDOMNode(focus);
       scrollIntoView(node, container, {onlyScrollIfNeeded: true});
+      node.focus();
     }
   }
 }

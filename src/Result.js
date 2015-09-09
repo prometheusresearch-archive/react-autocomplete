@@ -25,9 +25,9 @@ export default class Result extends React.Component {
     let {Root} = this.stylesheet;
     return (
       <Root
+        tabIndex={-1}
         state={{focus: focus}}
-        onClick={this.onClick}
-        onMouseEnter={this.onMouseEnter}>
+        onClick={this._onClick}>
         {this.props.result.title}
       </Root>
     );
@@ -41,15 +41,8 @@ export default class Result extends React.Component {
   }
 
   @autobind
-  onClick() {
+  _onClick() {
     this.props.onClick(this.props.result);
-  }
-
-  @autobind
-  onMouseEnter(e) {
-    if (this.props.onMouseEnter) {
-      this.props.onMouseEnter(e, this.props.result);
-    }
   }
 
 }
