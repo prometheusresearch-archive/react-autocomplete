@@ -46,7 +46,7 @@ export default Selectbox.style({
     Result: {
       Root: {
         display: 'block',
-        padding: '3px 20px',
+        padding: '5px 20px',
         clear: 'both',
         fontWeight: '400',
         lineHeight: '1.42857143',
