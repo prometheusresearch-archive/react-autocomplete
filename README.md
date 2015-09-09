@@ -1,15 +1,12 @@
-# React Selectbox
+# React Autocomplete
 
-Selectbox (with autocompletion) component for [React][].
+Autocomplete component for [React][].
 
 ## Installation
 
 Install via npm:
 
-    % npm install react-selectbox
-
-At the moment, React Selectbox also requires `Object.assign()` shim in older
-browsers.
+    % npm install @prometheusresearch/react-autocomplete
 
 ## Credits
 
