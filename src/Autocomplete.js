@@ -232,6 +232,17 @@ export default class Autocomplete extends React.Component {
   }
 
   @autobind
+  _layerDidUpdate(element) {
+    this._tether.position();
+  }
+
+  @autobind
+  _layerWillUnmount() {
+    this._tether.disable();
+    this._tether = null;
+  }
+
+  @autobind
   _setOpen(open) {
     this.setState({open});
   }
