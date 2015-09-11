@@ -232,7 +232,7 @@ export default class Autocomplete extends React.Component {
   }
 
   @autobind
-  _layerDidUpdate(element) {
+  _layerDidUpdate() {
     this._tether.position();
   }
 
