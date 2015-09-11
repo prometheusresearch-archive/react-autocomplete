@@ -368,7 +368,10 @@ export default class Autocomplete extends React.Component {
 }
 
 function equalValue(a, b) {
-  return a.id == b.id && a.title === b.title; // eslint-disable-line eqeqeq
+  return (
+    (!a && !b) ||
+    (a && b && a.id == b.id && a.title === b.title) // eslint-disable-line eqeqeq
+  );
 }
 
 /**

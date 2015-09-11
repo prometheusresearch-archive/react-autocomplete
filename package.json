@@ -18,7 +18,7 @@
     "react-component"
   ],
   "dependencies": {
-    "@prometheusresearch/react-stylesheet": "^0.2.0",
+    "@prometheusresearch/react-stylesheet": "^0.2.2",
     "autobind-decorator": "^1.3.2",
     "dom-scroll-into-view": "^1.0.1",
     "empty": "^0.10.1",
@@ -26,7 +26,7 @@
     "tether": "^1.1.0"
   },
   "peerDependencies": {
-    "react": ">= 0.13.0, < 0.14.0"
+    "react": "^0.14.0-rc1 || >= 0.13.0, < 0.15.0"
   },
   "devDependencies": {
     "babel": "^5.8.23",
@@ -36,14 +36,12 @@
     "browserify": "^8.1.1",
     "eslint": "^1.3.1",
     "eslint-plugin-react": "^3.3.1",
-    "mocha": "^2.1.0",
-    "mochify": "^2.1.1",
     "normalize.css": "^3.0.3",
     "power-assert": "^1.0.0",
     "react": "^0.13.0",
     "react-heatpack": "github:andreypopp/react-heatpack",
     "sinon": "^1.12.2",
-    "watchify": "^2.2.1"
+    "react": "^0.14.0-rc1 || >= 0.13.0, < 0.15.0"
   },
   "author": "Prometheus Research",
   "license": "MIT",

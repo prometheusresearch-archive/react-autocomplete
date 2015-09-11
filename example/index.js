@@ -6,6 +6,7 @@ import 'normalize.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import './index.css';
 
+import autobind         from 'autobind-decorator';
 import React            from 'react';
 import {stylesheet}     from '@prometheusresearch/react-stylesheet';
 import DateTimeField    from '../src';
@@ -97,6 +98,29 @@ let styled = stylesheet({
   }
 }, 'Example');
 
+class ControlledAutocomplete extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {value: null};
+  }
+
+  render() {
+    return (
+      <Autocomplete
+        {...this.props}
+        value={this.state.value}
+        onChange={this.onChange}
+        />
+    );
+  }
+
+  @autobind
+  onChange(value) {
+    this.setState({value});
+  }
+}
+
 export default class Example extends React.Component {
 
 	render() {
@@ -130,6 +154,31 @@ export default class Example extends React.Component {
                 ].concat(options)}
                 />
             </styled.demo>
+
+            <styled.demo>
+              <p>
+                Controlled:
+              </p>
+              <styled.code>
+{`<Autocomplete
+  options={[
+    {id: 1, title: 'First'},
+    {id: 2, title: 'Second'},
+    {id: 3, title: 'Third'},
+    {id: 4, title: 'Forth'}
+  ]}
+  />`}
+              </styled.code>
+              <ControlledAutocomplete
+                options={[
+                  {id: 1, title: 'First'},
+                  {id: 2, title: 'Second'},
+                  {id: 3, title: 'Third'},
+                  {id: 4, title: 'Forth'}
+                ].concat(options)}
+                />
+            </styled.demo>
+
           </styled.pane>
         </styled.content>
         <styled.footer>
