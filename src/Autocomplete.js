@@ -104,6 +104,10 @@ export default class Autocomplete extends React.Component {
 
   constructor(props) {
     super(props);
+
+    this._list = null;
+    this._search = null;
+
     this._ignoreFocus = false;
     this._tether = null;
     this._setOpenDebounced = debounce(this._setOpen, 0);
@@ -128,7 +132,7 @@ export default class Autocomplete extends React.Component {
         onError={undefined}
         options={undefined}>
         <Input
-          ref="search"
+          ref={this._onSearchRef}
           style={{width: '100%'}}
           onKeyDown={this._onQueryKeyDown}
           onClick={this._onClick}
@@ -144,6 +148,7 @@ export default class Autocomplete extends React.Component {
             didUpdate={this._layerDidUpdate}
             willUnmount={this._layerWillUnmount}>
             <ResultList
+              ref={this._onListRef}
               onKeyDown={this._onQueryKeyDown}
               onFocus={this._onListFocus}
               onBlur={this._onListBlur}
@@ -179,6 +184,16 @@ export default class Autocomplete extends React.Component {
   }
 
   @autobind
+  _onListRef(ref) {
+    this._list = ref;
+  }
+
+  @autobind
+  _onSearchRef(ref) {
+    this._search = ref;
+  }
+
+  @autobind
   _onFocus(e) {
     if (!this._ignoreFocus && !this.state.open) {
       this.showAllResults();
@@ -210,7 +225,7 @@ export default class Autocomplete extends React.Component {
 
   @autobind
   _layerDidMount(element) {
-    let target = React.findDOMNode(this.refs.search);
+    let target = React.findDOMNode(this._search);
     let size = target.getBoundingClientRect();
     element.style.width = `${size.width}px`;
     this._tether = new Tether({element, target, ...TETHER_CONFIG});
@@ -234,7 +249,7 @@ export default class Autocomplete extends React.Component {
   @autobind
   _focus() {
     this._ignoreFocus = true;
-    React.findDOMNode(this.refs.search).focus();
+    React.findDOMNode(this._search).focus();
     this.setState({focusedValue: null});
     this._ignoreFocus = false;
   }

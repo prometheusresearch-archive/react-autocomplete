@@ -6,6 +6,8 @@ TESTS         = $(shell find src -path '*/__tests__/*-test.js')
 SRC           = $(filter-out $(TESTS), $(shell find src -name '*.js'))
 LIB           = $(SRC:src/%=lib/%)
 NODE          = $(BIN)/babel-node $(BABEL_OPTIONS)
+MOCHA_OPTIONS = --compilers js:babel/register --require ./src/__tests__/setup.js
+MOCHA					= NODE_ENV=test iojs $(BIN)/mocha $(MOCHA_OPTIONS)
 
 build:
 	@$(MAKE) -j 8 $(LIB)
@@ -17,13 +19,10 @@ lint:
 	@$(BIN)/eslint src
 
 test:
-	@NODE_ENV=test $(NODE) $(BIN)/_mocha -- $(TESTS)
+	@$(MOCHA) -- $(TESTS)
 
 ci:
-	@NODE_ENV=test $(NODE) $(BIN)/_mocha --watch -- $(TESTS) 
-
-test-coverage:
-	@NODE_ENV=test $(NODE) $(BIN)/isparta cover $(BIN)/_mocha -- $(TESTS)
+	@$(MOCHA) --watch -- $(TESTS)
 
 version-major version-minor version-patch: lint
 	@npm version $(@:version-%=%)
