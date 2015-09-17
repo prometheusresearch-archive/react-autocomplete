@@ -1,6 +1,6 @@
 {
   "name": "@prometheusresearch/react-autocomplete",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Autocomplete component for React",
   "main": "lib/index.js",
   "scripts": {
