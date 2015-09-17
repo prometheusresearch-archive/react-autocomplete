@@ -85,6 +85,7 @@ export default class Autocomplete extends React.Component {
 
   static defaultProps = {
     search: searchArray,
+    onChange: emptyFunction,
     onClick: emptyFunction,
     onFocus: emptyFunction,
     onBlur: emptyFunction
@@ -170,6 +171,7 @@ export default class Autocomplete extends React.Component {
 
   @autobind
   showResults(searchTerm) {
+    this.setState({results: []});
     this.props.search(
       this.props.options,
       searchTerm.trim(),
@@ -287,10 +289,7 @@ export default class Autocomplete extends React.Component {
       focusedValue: value,
       searchTerm: value ? value.title : this.state.searchTerm,
     }, this._focusAndClose);
-
-    if (this.props.onChange) {
-      this.props.onChange(value);
-    }
+    this.props.onChange(value);
   }
 
   @autobind
@@ -312,6 +311,9 @@ export default class Autocomplete extends React.Component {
   @autobind
   _onQueryChange(e) {
     let searchTerm = e.target.value;
+    if (searchTerm === '') {
+      this.props.onChange(null);
+    }
     this.setState({
       searchTerm: searchTerm,
       focusedValue: null
