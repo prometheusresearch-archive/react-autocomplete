@@ -4,15 +4,10 @@
 
 import React, {PropTypes} from 'react';
 import scrollIntoView     from 'dom-scroll-into-view';
-import {attachStylesheet} from '@prometheusresearch/react-stylesheet';
+import * as Stylesheet    from '@prometheusresearch/react-stylesheet';
 import Result             from './Result';
 
-let Stylesheet = {
-  Root: 'ul',
-  Result: Result
-};
-
-@attachStylesheet(Stylesheet)
+@Stylesheet.styleable
 export default class ResultList extends React.Component {
 
   static propTypes = {
@@ -21,9 +16,14 @@ export default class ResultList extends React.Component {
     onSelect: PropTypes.func,
   };
 
+  static stylesheet = Stylesheet.createStylesheet({
+    Root: 'ul',
+    Result: Result
+  });
+
   render() {
-    let {results, stylesheet, ...props} = this.props;
-    let {Root} = stylesheet;
+    let {results, ...props} = this.props;
+    let {Root} = this.stylesheet;
     return (
       <Root {...props} tabIndex={-1}>
         {results.map(this.renderResult, this)}
@@ -37,7 +37,7 @@ export default class ResultList extends React.Component {
       this.props.focusedValue.id === result.id
     );
     return (
-      <this.props.stylesheet.Result
+      <this.stylesheet.Result
         ref={focus ? 'focus' : undefined}
         key={result.id}
         result={result}

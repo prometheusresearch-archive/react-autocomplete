@@ -4,13 +4,9 @@
 
 import autobind           from 'autobind-decorator';
 import React, {PropTypes} from 'react';
-import {attachStylesheet} from '@prometheusresearch/react-stylesheet';
+import * as Stylesheet    from '@prometheusresearch/react-stylesheet';
 
-let Stylesheet = {
-  Root: 'li'
-};
-
-@attachStylesheet(Stylesheet)
+@Stylesheet.styleable
 export default class Result extends React.Component {
 
   static propTypes = {
@@ -20,9 +16,13 @@ export default class Result extends React.Component {
     onMouseEnter: PropTypes.func,
   };
 
+  static stylesheet = Stylesheet.createStylesheet({
+    Root: 'li'
+  });
+
   render() {
-    let {focus, result, stylesheet, ...props} = this.props;
-    let {Root} = stylesheet;
+    let {focus, result, ...props} = this.props;
+    let {Root} = this.stylesheet;
     return (
       <Root
         tabIndex={-1}
