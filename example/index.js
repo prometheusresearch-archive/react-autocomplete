@@ -6,11 +6,11 @@ import 'normalize.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import './index.css';
 
-import autobind         from 'autobind-decorator';
-import React            from 'react';
-import {stylesheet}     from '@prometheusresearch/react-stylesheet';
-import DateTimeField    from '../src';
-import Autocomplete     from '../src/themed/Bootstrap';
+import autobind           from 'autobind-decorator';
+import React              from 'react';
+import {createStylesheet} from '@prometheusresearch/react-stylesheet';
+import DateTimeField      from '../src';
+import Autocomplete       from '../src/themed/Bootstrap';
 
 let colors = {
   brand0: 'rgb(1, 60, 154)',
@@ -26,7 +26,7 @@ for (let i = 5; i < 100; i++) {
   options.push({id: i, title: `Ok ${i}`});
 }
 
-let styled = stylesheet({
+let styled = createStylesheet({
 
   default: {
     boxSizing: 'border-box',

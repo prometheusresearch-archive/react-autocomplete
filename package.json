@@ -18,7 +18,7 @@
     "react-component"
   ],
   "dependencies": {
-    "@prometheusresearch/react-stylesheet": "^0.2.2",
+    "@prometheusresearch/react-stylesheet": "^0.3.0",
     "autobind-decorator": "^1.3.2",
     "dom-scroll-into-view": "^1.0.1",
     "empty": "^0.10.1",

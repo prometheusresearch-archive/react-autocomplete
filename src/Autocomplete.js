@@ -5,7 +5,7 @@
 import autobind           from 'autobind-decorator';
 import React, {PropTypes} from 'react';
 import debounce           from 'lodash/function/debounce';
-import ReactStylesheet    from '@prometheusresearch/react-stylesheet';
+import {attachStylesheet} from '@prometheusresearch/react-stylesheet';
 import emptyFunction      from 'empty/function';
 import Tether             from 'tether';
 import Layer              from './Layer';
@@ -32,7 +32,20 @@ const TETHER_CONFIG = {
   ]
 };
 
-@ReactStylesheet
+
+let Stylesheet = {
+  Root: {
+    position: 'relative',
+    outline: 'none',
+  },
+  Input: {
+    Component: 'input',
+    width: '100%',
+  },
+  ResultList: ResultList,
+};
+
+@attachStylesheet(Stylesheet)
 export default class Autocomplete extends React.Component {
 
   static propTypes = {
@@ -91,18 +104,6 @@ export default class Autocomplete extends React.Component {
     onBlur: emptyFunction
   };
 
-  static stylesheet = {
-    Root: {
-      position: 'relative',
-      outline: 'none',
-    },
-    Input: {
-      Component: 'input',
-      width: '100%',
-    },
-    ResultList: ResultList,
-  };
-
   constructor(props) {
     super(props);
 
@@ -121,9 +122,9 @@ export default class Autocomplete extends React.Component {
   }
 
   render() {
-    let {placeholder, ...props} = this.props;
+    let {placeholder, stylesheet, ...props} = this.props;
+    let {Root, Input, ResultList} = stylesheet;
     let {open} = this.state;
-    let {Root, Input, ResultList} = this.stylesheet;
     return (
       <Root
         {...props}
