@@ -81,7 +81,7 @@ export default class Autocomplete extends React.Component {
     /**
      * Input placeholder.
      */
-    placeholder: PropTypes.string
+    placeholder: PropTypes.string,
   };
 
   static defaultProps = {
@@ -117,6 +117,7 @@ export default class Autocomplete extends React.Component {
       open: false,
       results: [],
       searchTerm: this._searchTermFromProps(this.props),
+      value: this.props.value,
       focusedValue: null
     };
   }
@@ -166,7 +167,10 @@ export default class Autocomplete extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (!equalValue(nextProps.value, this.props.value)) {
       let searchTerm = this._searchTermFromProps(nextProps);
-      this.setState({searchTerm});
+      this.setState({
+        searchTerm,
+        value: nextProps.value
+      });
     }
   }
 
@@ -247,7 +251,17 @@ export default class Autocomplete extends React.Component {
 
   @autobind
   _setOpen(open) {
-    this.setState({open});
+    this.setState(state => {
+      state = {...state, open};
+      if (!open) {
+        if (state.value) {
+          state = {...state, searchTerm: state.value.title};
+        } else {
+          state = {...state, searchTerm: ''};
+        }
+      }
+      return state;
+    });
   }
 
   @autobind
@@ -312,13 +326,15 @@ export default class Autocomplete extends React.Component {
   @autobind
   _onQueryChange(e) {
     let searchTerm = e.target.value;
-    if (searchTerm === '') {
-      this.props.onChange(null);
-    }
-    this.setState({
+    let nextState = {
       searchTerm: searchTerm,
       focusedValue: null
-    });
+    };
+    if (searchTerm === '') {
+      nextState.value = null;
+      this.props.onChange(null);
+    }
+    this.setState(nextState);
     this.showResults(searchTerm);
   }
 
