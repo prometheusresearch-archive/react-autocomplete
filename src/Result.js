@@ -25,6 +25,7 @@ export default class Result extends React.Component {
     let {Root} = this.stylesheet;
     return (
       <Root
+        style={{cursor: 'pointer'}}
         tabIndex={-1}
         state={{focus: focus}}
         onClick={this._onClick}>
