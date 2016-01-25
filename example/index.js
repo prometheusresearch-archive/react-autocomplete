@@ -8,7 +8,8 @@ import './index.css';
 
 import autobind           from 'autobind-decorator';
 import React              from 'react';
-import {createStylesheet} from '@prometheusresearch/react-stylesheet';
+import {create as createStylesheet} from 'react-stylesheet';
+import {style as styleDOM} from 'react-dom-stylesheet';
 import DateTimeField      from '../src';
 import Autocomplete       from '../src/themed/Bootstrap';
 
@@ -96,7 +97,7 @@ let styled = createStylesheet({
     padding: 10,
     marginBottom: 10
   }
-}, 'Example');
+}, {styleDOM});
 
 class ControlledAutocomplete extends React.Component {
 

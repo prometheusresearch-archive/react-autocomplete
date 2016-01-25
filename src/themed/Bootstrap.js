@@ -2,10 +2,11 @@
  * @copyright 2015, Prometheus Research, LLC
  */
 
-import {styleComponent} from '@prometheusresearch/react-stylesheet';
+import {style} from 'react-stylesheet';
+import {style as styleDOM} from 'react-dom-stylesheet';
 import Autocomplete from '../Autocomplete';
 
-export default styleComponent(Autocomplete, {
+export default style(Autocomplete, {
   Input: {
     display: 'block',
     height: '34px',
@@ -69,4 +70,4 @@ export default styleComponent(Autocomplete, {
       }
     }
   }
-});
+}, {styleDOM});
