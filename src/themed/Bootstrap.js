@@ -3,7 +3,7 @@
  */
 
 import {style} from 'react-stylesheet';
-import {style as styleDOM} from 'react-dom-stylesheet';
+import {style as styleHostComponent} from 'react-dom-stylesheet';
 import Autocomplete from '../Autocomplete';
 
 export default style(Autocomplete, {
@@ -70,4 +70,4 @@ export default style(Autocomplete, {
       }
     }
   }
-}, {styleDOM});
+}, {styleHostComponent});

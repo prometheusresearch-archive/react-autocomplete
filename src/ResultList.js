@@ -5,7 +5,7 @@
 import React, {PropTypes} from 'react';
 import scrollIntoView     from 'dom-scroll-into-view';
 import * as Stylesheet    from 'react-stylesheet';
-import {style as styleDOM} from 'react-dom-stylesheet';
+import {style as styleHostComponent} from 'react-dom-stylesheet';
 import Result             from './Result';
 
 export default class ResultList extends React.Component {
@@ -19,7 +19,7 @@ export default class ResultList extends React.Component {
   static stylesheet = Stylesheet.create({
     Root: 'ul',
     Result: Result
-  }, {styleDOM});
+  }, {styleHostComponent});
 
   render() {
     let {results, ...props} = this.props;

@@ -5,7 +5,7 @@
 import autobind           from 'autobind-decorator';
 import React, {PropTypes} from 'react';
 import * as Stylesheet    from 'react-stylesheet';
-import {style as styleDOM} from 'react-dom-stylesheet';
+import {style as styleHostComponent} from 'react-dom-stylesheet';
 
 export default class Result extends React.Component {
 
@@ -18,7 +18,7 @@ export default class Result extends React.Component {
 
   static stylesheet = Stylesheet.create({
     Root: 'li'
-  }, {styleDOM});
+  }, {styleHostComponent});
 
   render() {
     let {focus, result, ...props} = this.props;

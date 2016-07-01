@@ -6,7 +6,7 @@ import autobind           from 'autobind-decorator';
 import React, {PropTypes} from 'react';
 import debounce           from 'lodash/function/debounce';
 import * as Stylesheet    from 'react-stylesheet';
-import {style as styleDOM} from 'react-dom-stylesheet';
+import {style as styleHostComponent} from 'react-dom-stylesheet';
 import emptyFunction      from 'empty/function';
 import Tether             from 'tether';
 import Layer              from './Layer';
@@ -102,7 +102,7 @@ export default class Autocomplete extends React.Component {
       width: '100%',
     },
     ResultList: ResultList,
-  }, {styleDOM});
+  }, {styleHostComponent});
 
   constructor(props) {
     super(props);
