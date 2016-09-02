@@ -22,8 +22,8 @@
     "dom-scroll-into-view": "^1.0.1",
     "empty": "^0.10.1",
     "lodash": "^3.10.1",
-    "react-dom-stylesheet": "^0.6.0",
-    "react-stylesheet": "^1.0.0-beta.3",
+    "react-dom-stylesheet": "^0.7.0",
+    "react-stylesheet": "^1.0.0",
     "tether": "^1.1.0"
   },
   "peerDependencies": {
