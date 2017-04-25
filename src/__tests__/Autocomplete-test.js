@@ -101,4 +101,15 @@ describe('Autocomplete', function() {
     items = ReactDOM.findDOMNode(component._list).querySelectorAll('li');
     assert(items.length === options.length);
   });
+
+  it('renders a filtered list on initial render with searchTerm', function() {
+    unmount();
+    component = TestUtils.renderIntoDocument(
+      <Autocomplete searchTerm="Joseph" options={options} />,
+    );
+    element = ReactDOM.findDOMNode(component);
+    click(component._search);
+    let items = ReactDOM.findDOMNode(component._list).querySelectorAll('li');
+    assert.equal(items.length, 2);
+  });
 });

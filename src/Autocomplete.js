@@ -155,7 +155,7 @@ export default class Autocomplete extends React.Component {
       ResultList = stylesheet.ResultList,
       ...props
     } = this.props;
-    const {open} = this.state;
+    const {open, searchTerm} = this.state;
     return (
       <Root
         style={{position: 'relative', outline: 'none'}}
@@ -174,7 +174,7 @@ export default class Autocomplete extends React.Component {
           onBlur={this._onBlur}
           placeholder={placeholder}
           onChange={this._onQueryChange}
-          value={this.state.searchTerm}
+          value={searchTerm}
         />
         {open &&
           this.state.results.length > 0 &&
@@ -211,8 +211,8 @@ export default class Autocomplete extends React.Component {
     this.props.search(this.props.options, searchTerm.trim(), this._onSearchComplete);
   };
 
-  showAllResults = () => {
-    this.showResults('');
+  showResultsAndOpen = () => {
+    this.showResults(this.state.searchTerm);
     this._open();
   };
 
@@ -226,7 +226,7 @@ export default class Autocomplete extends React.Component {
 
   _onFocus = (e: UIEvent) => {
     if (!this._ignoreFocus && !this.state.open) {
-      this.showAllResults();
+      this.showResultsAndOpen();
     }
     if (this.props.onFocus) {
       this.props.onFocus(e);
@@ -372,7 +372,7 @@ export default class Autocomplete extends React.Component {
 
   _onClick = (e: MouseEvent) => {
     if (!this.state.open) {
-      this.showAllResults();
+      this.showResultsAndOpen();
     }
     if (this.props.onClick) {
       this.props.onClick(e);
@@ -420,7 +420,7 @@ export default class Autocomplete extends React.Component {
             });
           }
         } else {
-          this.showAllResults();
+          this.showResultsAndOpen();
         }
         break;
       default:
