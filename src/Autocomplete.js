@@ -248,6 +248,12 @@ export default class Autocomplete extends React.Component {
     });
   };
 
+  focus() {
+    if (this._search != null) {
+      this._search.focus();
+    }
+  }
+
   _open = () => {
     this._setOpenDebounced(true);
   };
