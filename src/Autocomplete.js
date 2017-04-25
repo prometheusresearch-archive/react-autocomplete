@@ -127,6 +127,7 @@ export default class Autocomplete extends React.Component {
     focusedValue: ?AutocompleteResult,
   };
 
+  _isMounted: boolean = false;
   _list: ?HTMLElement = null;
   _search: ?HTMLElement = null;
   _ignoreFocus: boolean = false;
@@ -194,6 +195,14 @@ export default class Autocomplete extends React.Component {
           </Layer>}
       </Root>
     );
+  }
+
+  componentDidMount() {
+    this._isMounted = true;
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   componentWillReceiveProps(nextProps: Props) {
@@ -272,6 +281,9 @@ export default class Autocomplete extends React.Component {
   };
 
   _setOpen = (open: boolean) => {
+    if (!this._isMounted) {
+      return;
+    }
     this.setState(state => {
       state = {...state, open};
       if (!open) {
