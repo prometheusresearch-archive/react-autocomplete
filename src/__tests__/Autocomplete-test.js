@@ -2,15 +2,14 @@
  * @copyright 2015, Prometheus Research, LLC
  */
 
-import React        from 'react';
-import TestUtils    from 'react/lib/ReactTestUtils';
-import forEach      from 'lodash/collection/forEach';
+import React from 'react';
+import TestUtils from 'react/lib/ReactTestUtils';
+import forEach from 'lodash/collection/forEach';
 import Autocomplete from '../Autocomplete';
 
-import options      from './fixture.json';
+import options from './fixture.json';
 
 describe('Autocomplete', function() {
-
   let component;
   let element;
   let search;
@@ -101,5 +100,4 @@ describe('Autocomplete', function() {
     items = React.findDOMNode(component._list).querySelectorAll('li');
     assert(items.length === options.length);
   });
-
 });

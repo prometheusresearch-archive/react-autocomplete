@@ -3,7 +3,7 @@
  */
 
 import assert from 'power-assert';
-import jsdom  from 'jsdom';
+import jsdom from 'jsdom';
 
 let document = jsdom.jsdom('<!doctype html><html><body></body></html>');
 let window = document.defaultView;

@@ -2,15 +2,15 @@
  * @copyright 2015, Prometheus Research, LLC
  */
 
-import autobind           from 'autobind-decorator';
+import autobind from 'autobind-decorator';
 import React, {PropTypes} from 'react';
-import debounce           from 'lodash/function/debounce';
-import * as Stylesheet    from 'react-stylesheet';
+import debounce from 'lodash/function/debounce';
+import * as Stylesheet from 'react-stylesheet';
 import {style as styleHostComponent} from 'react-dom-stylesheet';
-import emptyFunction      from 'empty/function';
-import Tether             from 'tether';
-import Layer              from './Layer';
-import ResultList         from './ResultList';
+import emptyFunction from 'empty/function';
+import Tether from 'tether';
+import Layer from './Layer';
+import ResultList from './ResultList';
 
 const KEYS = {
   ARROW_UP: 'ArrowUp',
@@ -23,21 +23,18 @@ const TETHER_CONFIG = {
   attachment: 'top left',
   targetAttachment: 'bottom left',
   optimizations: {
-    moveElement: false
+    moveElement: false,
   },
   constraints: [
     {
       to: 'window',
-      attachment: 'together'
-    }
-  ]
+      attachment: 'together',
+    },
+  ],
 };
 
-
 export default class Autocomplete extends React.Component {
-
   static propTypes = {
-
     /**
      * Option object is opaque to <Autocomplete /> component.
      *
@@ -89,20 +86,23 @@ export default class Autocomplete extends React.Component {
     onChange: emptyFunction,
     onClick: emptyFunction,
     onFocus: emptyFunction,
-    onBlur: emptyFunction
+    onBlur: emptyFunction,
   };
 
-  static stylesheet = Stylesheet.create({
-    Root: {
-      position: 'relative',
-      outline: 'none',
+  static stylesheet = Stylesheet.create(
+    {
+      Root: {
+        position: 'relative',
+        outline: 'none',
+      },
+      Input: {
+        Component: 'input',
+        width: '100%',
+      },
+      ResultList: ResultList,
     },
-    Input: {
-      Component: 'input',
-      width: '100%',
-    },
-    ResultList: ResultList,
-  }, {styleHostComponent});
+    {styleHostComponent},
+  );
 
   constructor(props) {
     super(props);
@@ -118,7 +118,7 @@ export default class Autocomplete extends React.Component {
       results: [],
       searchTerm: this._searchTermFromProps(this.props),
       value: this.props.value,
-      focusedValue: null
+      focusedValue: null,
     };
   }
 
@@ -144,8 +144,9 @@ export default class Autocomplete extends React.Component {
           placeholder={placeholder}
           onChange={this._onQueryChange}
           value={this.state.searchTerm}
-          />
-        {open && this.state.results.length > 0 &&
+        />
+        {open &&
+          this.state.results.length > 0 &&
           <Layer
             didMount={this._layerDidMount}
             didUpdate={this._layerDidUpdate}
@@ -158,7 +159,7 @@ export default class Autocomplete extends React.Component {
               onSelect={this._onValueChange}
               results={this.state.results}
               focusedValue={this.state.focusedValue}
-              />
+            />
           </Layer>}
       </Root>
     );
@@ -169,88 +170,72 @@ export default class Autocomplete extends React.Component {
       let searchTerm = this._searchTermFromProps(nextProps);
       this.setState({
         searchTerm,
-        value: nextProps.value
+        value: nextProps.value,
       });
     }
   }
 
-  @autobind
-  showResults(searchTerm) {
+  @autobind showResults(searchTerm) {
     this.setState({results: []});
-    this.props.search(
-      this.props.options,
-      searchTerm.trim(),
-      this._onSearchComplete
-    );
+    this.props.search(this.props.options, searchTerm.trim(), this._onSearchComplete);
   }
 
-  @autobind
-  showAllResults() {
+  @autobind showAllResults() {
     this.showResults('');
     this._open();
   }
 
-  @autobind
-  _onListRef(ref) {
+  @autobind _onListRef(ref) {
     this._list = ref;
   }
 
-  @autobind
-  _onSearchRef(ref) {
+  @autobind _onSearchRef(ref) {
     this._search = ref;
   }
 
-  @autobind
-  _onFocus(e) {
+  @autobind _onFocus(e) {
     if (!this._ignoreFocus && !this.state.open) {
       this.showAllResults();
     }
     this.props.onFocus(e); // eslint-disable-line react/prop-types
   }
 
-  @autobind
-  _onBlur(e) {
+  @autobind _onBlur(e) {
     if (!this._ignoreFocus) {
       this._close();
     }
     this.props.onBlur(e); // eslint-disable-line react/prop-types
   }
 
-  @autobind
-  _onListFocus() {
+  @autobind _onListFocus() {
     if (!this._ignoreFocus) {
       this._open();
     }
   }
 
-  @autobind
-  _onListBlur() {
+  @autobind _onListBlur() {
     if (!this._ignoreFocus) {
       this._close();
     }
   }
 
-  @autobind
-  _layerDidMount(element) {
+  @autobind _layerDidMount(element) {
     let target = React.findDOMNode(this._search);
     let size = target.getBoundingClientRect();
     element.style.width = `${size.width}px`;
     this._tether = new Tether({element, target, ...TETHER_CONFIG});
   }
 
-  @autobind
-  _layerDidUpdate() {
+  @autobind _layerDidUpdate() {
     this._tether.position();
   }
 
-  @autobind
-  _layerWillUnmount() {
+  @autobind _layerWillUnmount() {
     this._tether.disable();
     this._tether = null;
   }
 
-  @autobind
-  _setOpen(open) {
+  @autobind _setOpen(open) {
     this.setState(state => {
       state = {...state, open};
       if (!open) {
@@ -264,32 +249,27 @@ export default class Autocomplete extends React.Component {
     });
   }
 
-  @autobind
-  _open() {
+  @autobind _open() {
     this._setOpenDebounced(true);
   }
 
-  @autobind
-  _close() {
+  @autobind _close() {
     this._setOpenDebounced(false);
   }
 
-  @autobind
-  _focus() {
+  @autobind _focus() {
     this._ignoreFocus = true;
     React.findDOMNode(this._search).focus();
     this.setState({focusedValue: null});
     this._ignoreFocus = false;
   }
 
-  @autobind
-  _focusAndClose() {
+  @autobind _focusAndClose() {
     this._focus();
     this._close();
   }
 
-  @autobind
-  _searchTermFromProps(props) {
+  @autobind _searchTermFromProps(props) {
     let {searchTerm, value} = props;
     if (!searchTerm && value) {
       searchTerm = value.title;
@@ -297,18 +277,19 @@ export default class Autocomplete extends React.Component {
     return searchTerm || '';
   }
 
-  @autobind
-  _onValueChange(value) {
-    this.setState({
-      value: value,
-      focusedValue: value,
-      searchTerm: value ? value.title : this.state.searchTerm,
-    }, this._focusAndClose);
+  @autobind _onValueChange(value) {
+    this.setState(
+      {
+        value: value,
+        focusedValue: value,
+        searchTerm: value ? value.title : this.state.searchTerm,
+      },
+      this._focusAndClose,
+    );
     this.props.onChange(value);
   }
 
-  @autobind
-  _onSearchComplete(err, results) {
+  @autobind _onSearchComplete(err, results) {
     if (err) {
       if (this.props.onError) {
         this.props.onError(err);
@@ -319,16 +300,15 @@ export default class Autocomplete extends React.Component {
 
     this.setState({
       open: true,
-      results: results
+      results: results,
     });
   }
 
-  @autobind
-  _onQueryChange(e) {
+  @autobind _onQueryChange(e) {
     let searchTerm = e.target.value;
     let nextState = {
       searchTerm: searchTerm,
-      focusedValue: null
+      focusedValue: null,
     };
     if (searchTerm === '') {
       nextState.value = null;
@@ -338,64 +318,59 @@ export default class Autocomplete extends React.Component {
     this.showResults(searchTerm);
   }
 
-  @autobind
-  _onClick(e) {
+  @autobind _onClick(e) {
     if (!this.state.open) {
       this.showAllResults();
     }
     this.props.onClick(e); // eslint-disable-line react/prop-types
   }
 
-  @autobind
-  _onQueryKeyDown(e) {
+  @autobind _onQueryKeyDown(e) {
     let {open, focusedValue, results} = this.state;
     switch (e.key) {
-    case KEYS.ENTER:
-      e.preventDefault();
-      this._onValueChange(focusedValue);
-      break;
-    case KEYS.ESCAPE:
-      this._focusAndClose();
-      break;
-    case KEYS.ARROW_UP:
-      if (!open) {
+      case KEYS.ENTER:
+        e.preventDefault();
+        this._onValueChange(focusedValue);
         break;
-      }
-      e.preventDefault();
-      let prevIdx = Math.max(
-        this._indexOfFocusedValue - 1,
-        -1
-      );
-      if (prevIdx === -1) {
-        this._focus();
-      } else {
-        this.setState({
-          searchTerm: results[prevIdx].title,
-          focusedValue: results[prevIdx],
-        });
-      }
-      break;
-    case KEYS.ARROW_DOWN:
-      e.preventDefault();
-      if (open) {
-        let nextIdx = Math.min(
-          this._indexOfFocusedValue + (open ? 1 : 0),
-          results.length
-        );
-        if (nextIdx === results.length) {
+      case KEYS.ESCAPE:
+        this._focusAndClose();
+        break;
+      case KEYS.ARROW_UP:
+        if (!open) {
+          break;
+        }
+        e.preventDefault();
+        let prevIdx = Math.max(this._indexOfFocusedValue - 1, -1);
+        if (prevIdx === -1) {
           this._focus();
         } else {
           this.setState({
-            searchTerm: results[nextIdx].title,
-            focusedValue: results[nextIdx]
+            searchTerm: results[prevIdx].title,
+            focusedValue: results[prevIdx],
           });
         }
-      } else {
-        this.showAllResults();
-      }
-      break;
-    default:
-      break;
+        break;
+      case KEYS.ARROW_DOWN:
+        e.preventDefault();
+        if (open) {
+          let nextIdx = Math.min(
+            this._indexOfFocusedValue + (open ? 1 : 0),
+            results.length,
+          );
+          if (nextIdx === results.length) {
+            this._focus();
+          } else {
+            this.setState({
+              searchTerm: results[nextIdx].title,
+              focusedValue: results[nextIdx],
+            });
+          }
+        } else {
+          this.showAllResults();
+        }
+        break;
+      default:
+        break;
     }
   }
 
@@ -414,8 +389,7 @@ export default class Autocomplete extends React.Component {
 
 function equalValue(a, b) {
   return (
-    (!a && !b) ||
-    (a && b && a.id == b.id && a.title === b.title) // eslint-disable-line eqeqeq
+    (!a && !b) || (a && b && a.id == b.id && a.title === b.title) // eslint-disable-line eqeqeq
   );
 }
 

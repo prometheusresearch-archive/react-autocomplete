@@ -2,12 +2,11 @@
  * @copyright 2015 Prometheus Research, LLC
  */
 
-import emptyFunction      from 'empty/function';
+import emptyFunction from 'empty/function';
 import React, {PropTypes} from 'react';
 import ReactDOM from 'react-dom';
 
 export default class Layer extends React.Component {
-
   static propTypes = {
     didMount: PropTypes.func,
     didUpdate: PropTypes.func,
@@ -36,14 +35,16 @@ export default class Layer extends React.Component {
     this._component = ReactDOM.render(
       React.Children.only(this.props.children),
       this._element,
-      this._didMount);
+      this._didMount,
+    );
   }
 
   componentDidUpdate() {
     this._component = ReactDOM.render(
       React.Children.only(this.props.children),
       this._element,
-      this._didUpdate);
+      this._didUpdate,
+    );
   }
 
   componentWillUnmount() {
@@ -56,11 +57,11 @@ export default class Layer extends React.Component {
 
   _didMount = () => {
     this.props.didMount(this._element);
-  }
+  };
 
   _didUpdate = () => {
     this.props.didUpdate(this._element);
-  }
+  };
 
   _createElement() {
     let element = document.createElement('div');
