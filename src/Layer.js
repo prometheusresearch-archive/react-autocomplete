@@ -1,30 +1,24 @@
 /**
  * @copyright 2015 Prometheus Research, LLC
+ * @flow
  */
 
-import emptyFunction from 'empty/function';
-import React, {PropTypes} from 'react';
+import invariant from 'invariant';
+import React from 'react';
 import ReactDOM from 'react-dom';
 
+type Props = {
+  didMount?: HTMLElement => void,
+  didUpdate?: HTMLElement => void,
+  willUnmount?: HTMLElement => void,
+  children?: React.Element<*>,
+};
+
 export default class Layer extends React.Component {
-  static propTypes = {
-    didMount: PropTypes.func,
-    didUpdate: PropTypes.func,
-    willUnmount: PropTypes.func,
-    children: PropTypes.node,
-  };
+  props: Props;
 
-  static defaultProps = {
-    didMount: emptyFunction,
-    didUpdate: emptyFunction,
-    willUnmount: emptyFunction,
-  };
-
-  constructor(props) {
-    super(props);
-    this._element = null;
-    this._component = null;
-  }
+  _element: ?HTMLElement = null;
+  _component: ?React.Component<any, any, any> = null;
 
   render() {
     return null;
@@ -48,25 +42,39 @@ export default class Layer extends React.Component {
   }
 
   componentWillUnmount() {
-    this.props.willUnmount(this._element);
-    ReactDOM.unmountComponentAtNode(this._element);
-    document.body.removeChild(this._element);
+    const element = this._element;
+    invariant(element != null, 'Invalid DOM state');
+    if (this.props.willUnmount) {
+      this.props.willUnmount(element);
+    }
+    ReactDOM.unmountComponentAtNode(element);
+    if (document.body != null) {
+      document.body.removeChild(element);
+    }
     this._element = null;
     this._component = null;
   }
 
   _didMount = () => {
-    this.props.didMount(this._element);
+    if (this.props.didMount) {
+      invariant(this._element != null, 'Invalid DOM state');
+      this.props.didMount(this._element);
+    }
   };
 
   _didUpdate = () => {
-    this.props.didUpdate(this._element);
+    if (this.props.didUpdate) {
+      invariant(this._element != null, 'Invalid DOM state');
+      this.props.didUpdate(this._element);
+    }
   };
 
   _createElement() {
-    let element = document.createElement('div');
+    const element = document.createElement('div');
     element.style.zIndex = '15000';
-    document.body.appendChild(element);
+    if (document.body != null) {
+      document.body.appendChild(element);
+    }
     return element;
   }
 }

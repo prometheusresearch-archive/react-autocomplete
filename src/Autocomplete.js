@@ -9,7 +9,6 @@ import invariant from 'invariant';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import debounce from 'lodash/function/debounce';
-import emptyFunction from 'empty/function';
 import Tether from 'tether';
 import Layer from './Layer';
 import ResultList from './ResultList';
@@ -75,27 +74,27 @@ type Props = {
   /**
    * Callback which is called when a result is being choosen.
    */
-  onChange: ?AutocompleteResult => void,
+  onChange?: ?AutocompleteResult => void,
 
   /**
    * Callback which is called when the `search` function returns an error.
    */
-  onError: Error => void,
+  onError?: Error => void,
 
   /**
    * Standard focus event.
    */
-  onFocus: UIEvent => void,
+  onFocus?: UIEvent => void,
 
   /**
    * Standard blur event.
    */
-  onBlur: UIEvent => void,
+  onBlur?: UIEvent => void,
 
   /**
    * Standard click event.
    */
-  onClick: MouseEvent => void,
+  onClick?: MouseEvent => void,
 
   /**
    * Input placeholder.
@@ -112,10 +111,6 @@ export default class Autocomplete extends React.Component {
 
   static defaultProps = {
     search: searchArray,
-    onChange: emptyFunction,
-    onClick: emptyFunction,
-    onFocus: emptyFunction,
-    onBlur: emptyFunction,
   };
 
   static stylesheet = {
@@ -233,14 +228,18 @@ export default class Autocomplete extends React.Component {
     if (!this._ignoreFocus && !this.state.open) {
       this.showAllResults();
     }
-    this.props.onFocus(e); // eslint-disable-line react/prop-types
+    if (this.props.onFocus) {
+      this.props.onFocus(e);
+    }
   };
 
   _onBlur = (e: UIEvent) => {
     if (!this._ignoreFocus) {
       this._close();
     }
-    this.props.onBlur(e); // eslint-disable-line react/prop-types
+    if (this.props.onBlur) {
+      this.props.onBlur(e);
+    }
   };
 
   _onListFocus = () => {
@@ -331,7 +330,9 @@ export default class Autocomplete extends React.Component {
       },
       this._focusAndClose,
     );
-    this.props.onChange(value);
+    if (this.props.onChange) {
+      this.props.onChange(value);
+    }
   };
 
   _onSearchComplete = (err: ?Error, results: Array<AutocompleteResult>) => {
@@ -357,7 +358,9 @@ export default class Autocomplete extends React.Component {
         focusedValue: null,
         value: null,
       });
-      this.props.onChange(null);
+      if (this.props.onChange) {
+        this.props.onChange(null);
+      }
     } else {
       this.setState({
         searchTerm: searchTerm,
@@ -371,7 +374,9 @@ export default class Autocomplete extends React.Component {
     if (!this.state.open) {
       this.showAllResults();
     }
-    this.props.onClick(e); // eslint-disable-line react/prop-types
+    if (this.props.onClick) {
+      this.props.onClick(e);
+    }
   };
 
   _onQueryKeyDown = (e: KeyboardEvent) => {
