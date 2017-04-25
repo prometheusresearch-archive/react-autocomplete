@@ -47,12 +47,9 @@
     "jsdom": "^6.3.0",
     "mocha": "^2.3.3",
     "normalize.css": "^3.0.3",
-    "power-assert": "^1.0.0",
     "prettier": "^1.2.2",
     "react": "^0.14.6",
-    "react-dom": "^0.14.6",
-    "react-heatpack": "github:andreypopp/react-heatpack",
-    "sinon": "^1.12.2"
+    "react-dom": "^0.14.6"
   },
   "author": "Prometheus Research",
   "license": "MIT",
