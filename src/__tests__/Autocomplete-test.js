@@ -3,6 +3,7 @@
  */
 
 import React from 'react';
+import ReactDOM from 'react-dom';
 import TestUtils from 'react/lib/ReactTestUtils';
 import forEach from 'lodash/collection/forEach';
 import Autocomplete from '../Autocomplete';
@@ -16,29 +17,29 @@ describe('Autocomplete', function() {
 
   function mount() {
     component = TestUtils.renderIntoDocument(<Autocomplete options={options} />);
-    element = React.findDOMNode(component);
+    element = ReactDOM.findDOMNode(component);
   }
 
   function unmount() {
     if (element.parentNode) {
-      React.unmountComponentAtNode(element.parentNode);
+      ReactDOM.unmountComponentAtNode(element.parentNode);
     }
   }
 
   function click(component) {
-    TestUtils.SimulateNative.click(React.findDOMNode(component));
+    TestUtils.SimulateNative.click(ReactDOM.findDOMNode(component));
   }
 
   function focus(component) {
-    TestUtils.SimulateNative.focus(React.findDOMNode(component));
+    TestUtils.SimulateNative.focus(ReactDOM.findDOMNode(component));
   }
 
   function blur(component) {
-    TestUtils.SimulateNative.blur(React.findDOMNode(component));
+    TestUtils.SimulateNative.blur(ReactDOM.findDOMNode(component));
   }
 
   function change(component, value) {
-    let node = React.findDOMNode(component);
+    let node = ReactDOM.findDOMNode(component);
     node.value = value;
     TestUtils.Simulate.change(node);
   }
@@ -82,7 +83,7 @@ describe('Autocomplete', function() {
   it('shows an entire list of options when openned', function() {
     click(component._search);
     assert(component._list !== null);
-    let items = React.findDOMNode(component._list).querySelectorAll('li');
+    let items = ReactDOM.findDOMNode(component._list).querySelectorAll('li');
     assert(items.length === options.length);
   });
 
@@ -92,12 +93,12 @@ describe('Autocomplete', function() {
     assert(component._list !== null);
 
     change(component._search, 'Joseph');
-    items = React.findDOMNode(component._list).querySelectorAll('li');
+    items = ReactDOM.findDOMNode(component._list).querySelectorAll('li');
     assert(items.length === 2);
     forEach(items, item => assert(/Joseph/.exec(item.innerHTML)));
 
     change(component._search, '');
-    items = React.findDOMNode(component._list).querySelectorAll('li');
+    items = ReactDOM.findDOMNode(component._list).querySelectorAll('li');
     assert(items.length === options.length);
   });
 });

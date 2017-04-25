@@ -1,8 +1,13 @@
 /**
  * @copyright 2015, Prometheus Research, LLC
+ * @flow
  */
 
-import React, {PropTypes} from 'react';
+import type {AutocompleteResult} from './index';
+
+import invariant from 'invariant';
+import React from 'react';
+import ReactDOM from 'react-dom';
 import debounce from 'lodash/function/debounce';
 import * as Stylesheet from 'react-stylesheet';
 import {style as styleHostComponent} from 'react-dom-stylesheet';
@@ -32,53 +37,76 @@ const TETHER_CONFIG = {
   ],
 };
 
+type Props = {
+  /**
+   * Option object is opaque to <Autocomplete /> component.
+   *
+   * It is passed to `search` function (also passed as props) along with
+   * the current `searchTerm` to return a list of results.
+   *
+   * The default `search` function expectds `options` to be an array of
+   * objects with `title` attribute on which search is performed.
+   */
+  options: any,
+
+  searchTerm?: string,
+
+  /**
+   * Search function.
+   *
+   * It accepts three arguments: `options`, `searchTerm` and `cb`:
+   *
+   * * `options` is the `options` prop passed to <Autocomplete />.
+   * * `searchTerm` is the current value of input
+   * * `cb` is a Node-style callback which should be used to return results
+   *   back to <Autocomplete />
+   */
+  search: (
+    options: any,
+    searchTerm: string,
+    cb: (err: ?Error, results: Array<AutocompleteResult>) => void,
+  ) => void,
+
+  /**
+   * Value.
+   *
+   * Should be an object with `title` attribute.
+   */
+  value?: AutocompleteResult,
+
+  /**
+   * Callback which is called when a result is being choosen.
+   */
+  onChange: ?AutocompleteResult => void,
+
+  /**
+   * Callback which is called when the `search` function returns an error.
+   */
+  onError: Error => void,
+
+  /**
+   * Standard focus event.
+   */
+  onFocus: UIEvent => void,
+
+  /**
+   * Standard blur event.
+   */
+  onBlur: UIEvent => void,
+
+  /**
+   * Standard click event.
+   */
+  onClick: MouseEvent => void,
+
+  /**
+   * Input placeholder.
+   */
+  placeholder: string,
+};
+
 export default class Autocomplete extends React.Component {
-  static propTypes = {
-    /**
-     * Option object is opaque to <Autocomplete /> component.
-     *
-     * It is passed to `search` function (also passed as props) along with
-     * the current `searchTerm` to return a list of results.
-     *
-     * The default `search` function expectds `options` to be an array of
-     * objects with `title` attribute on which search is performed.
-     */
-    options: PropTypes.any,
-
-    /**
-     * Search function.
-     *
-     * It accepts three arguments: `options`, `searchTerm` and `cb`:
-     *
-     * * `options` is the `options` prop passed to <Autocomplete />.
-     * * `searchTerm` is the current value of input
-     * * `cb` is a Node-style callback which should be used to return results
-     *   back to <Autocomplete />
-     */
-    search: PropTypes.func,
-
-    /**
-     * Value.
-     *
-     * Should be an object with `title` attribute.
-     */
-    value: PropTypes.object,
-
-    /**
-     * Callback which is called when a result is being choosen.
-     */
-    onChange: PropTypes.func,
-
-    /**
-     * Callback which is called when the `search` function returns an error.
-     */
-    onError: PropTypes.func,
-
-    /**
-     * Input placeholder.
-     */
-    placeholder: PropTypes.string,
-  };
+  props: Props;
 
   static defaultProps = {
     search: searchArray,
@@ -103,14 +131,23 @@ export default class Autocomplete extends React.Component {
     {styleHostComponent},
   );
 
-  constructor(props) {
+  state: {
+    open: boolean,
+    results: Array<AutocompleteResult>,
+    searchTerm: string,
+    value: ?AutocompleteResult,
+    focusedValue: ?AutocompleteResult,
+  };
+
+  _list: ?HTMLElement = null;
+  _search: ?HTMLElement = null;
+  _ignoreFocus: boolean = false;
+  _tether: any = null;
+  _setOpenDebounced: boolean => void;
+
+  constructor(props: Props) {
     super(props);
 
-    this._list = null;
-    this._search = null;
-
-    this._ignoreFocus = false;
-    this._tether = null;
     this._setOpenDebounced = debounce(this._setOpen, 0);
     this.state = {
       open: false,
@@ -164,7 +201,7 @@ export default class Autocomplete extends React.Component {
     );
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: Props) {
     if (!equalValue(nextProps.value, this.props.value)) {
       let searchTerm = this._searchTermFromProps(nextProps);
       this.setState({
@@ -174,7 +211,7 @@ export default class Autocomplete extends React.Component {
     }
   }
 
-  showResults = searchTerm => {
+  showResults = (searchTerm: string) => {
     this.setState({results: []});
     this.props.search(this.props.options, searchTerm.trim(), this._onSearchComplete);
   };
@@ -184,22 +221,22 @@ export default class Autocomplete extends React.Component {
     this._open();
   };
 
-  _onListRef = ref => {
+  _onListRef = (ref: any) => {
     this._list = ref;
   };
 
-  _onSearchRef = ref => {
+  _onSearchRef = (ref: any) => {
     this._search = ref;
   };
 
-  _onFocus = e => {
+  _onFocus = (e: UIEvent) => {
     if (!this._ignoreFocus && !this.state.open) {
       this.showAllResults();
     }
     this.props.onFocus(e); // eslint-disable-line react/prop-types
   };
 
-  _onBlur = e => {
+  _onBlur = (e: UIEvent) => {
     if (!this._ignoreFocus) {
       this._close();
     }
@@ -218,9 +255,10 @@ export default class Autocomplete extends React.Component {
     }
   };
 
-  _layerDidMount = element => {
-    let target = React.findDOMNode(this._search);
-    let size = target.getBoundingClientRect();
+  _layerDidMount = (element: HTMLElement) => {
+    const target = ReactDOM.findDOMNode(this._search);
+    invariant(target instanceof HTMLElement, 'Invalid DOM state');
+    const size = target.getBoundingClientRect();
     element.style.width = `${size.width}px`;
     this._tether = new Tether({element, target, ...TETHER_CONFIG});
   };
@@ -234,7 +272,7 @@ export default class Autocomplete extends React.Component {
     this._tether = null;
   };
 
-  _setOpen = open => {
+  _setOpen = (open: boolean) => {
     this.setState(state => {
       state = {...state, open};
       if (!open) {
@@ -264,7 +302,9 @@ export default class Autocomplete extends React.Component {
 
   _focus = () => {
     this._ignoreFocus = true;
-    React.findDOMNode(this._search).focus();
+    const searchElement = ReactDOM.findDOMNode(this._search);
+    invariant(searchElement instanceof HTMLElement, 'Invalid DOM state');
+    searchElement.focus();
     this.setState({focusedValue: null});
     this._ignoreFocus = false;
   };
@@ -274,7 +314,7 @@ export default class Autocomplete extends React.Component {
     this._close();
   };
 
-  _searchTermFromProps = props => {
+  _searchTermFromProps = (props: Props) => {
     let {searchTerm, value} = props;
     if (!searchTerm && value) {
       searchTerm = value.title;
@@ -282,7 +322,7 @@ export default class Autocomplete extends React.Component {
     return searchTerm || '';
   };
 
-  _onValueChange = value => {
+  _onValueChange = (value: ?AutocompleteResult) => {
     this.setState(
       {
         value: value,
@@ -294,7 +334,7 @@ export default class Autocomplete extends React.Component {
     this.props.onChange(value);
   };
 
-  _onSearchComplete = (err, results) => {
+  _onSearchComplete = (err: ?Error, results: Array<AutocompleteResult>) => {
     if (err) {
       if (this.props.onError) {
         this.props.onError(err);
@@ -309,28 +349,32 @@ export default class Autocomplete extends React.Component {
     });
   };
 
-  _onQueryChange = e => {
-    let searchTerm = e.target.value;
-    let nextState = {
-      searchTerm: searchTerm,
-      focusedValue: null,
-    };
+  _onQueryChange = (e: UIEvent & {target: HTMLInputElement}) => {
+    const searchTerm = e.target.value;
     if (searchTerm === '') {
-      nextState.value = null;
+      this.setState({
+        searchTerm: searchTerm,
+        focusedValue: null,
+        value: null,
+      });
       this.props.onChange(null);
+    } else {
+      this.setState({
+        searchTerm: searchTerm,
+        focusedValue: null,
+      });
     }
-    this.setState(nextState);
     this.showResults(searchTerm);
   };
 
-  _onClick = e => {
+  _onClick = (e: MouseEvent) => {
     if (!this.state.open) {
       this.showAllResults();
     }
     this.props.onClick(e); // eslint-disable-line react/prop-types
   };
 
-  _onQueryKeyDown = e => {
+  _onQueryKeyDown = (e: KeyboardEvent) => {
     let {open, focusedValue, results} = this.state;
     switch (e.key) {
       case KEYS.ENTER:
@@ -379,7 +423,7 @@ export default class Autocomplete extends React.Component {
     }
   };
 
-  get _indexOfFocusedValue() {
+  get _indexOfFocusedValue(): number {
     if (!this.state.focusedValue) {
       return -1;
     }

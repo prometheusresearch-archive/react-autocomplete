@@ -1,12 +1,12 @@
 .DELETE_ON_ERROR:
 
-BABEL_OPTIONS = --stage 0
+BABEL_OPTIONS =
 BIN           = ./node_modules/.bin
 TESTS         = $(shell find src -path '*/__tests__/*.js')
 SRC           = $(filter-out $(TESTS), $(shell find src -name '*.js'))
 LIB           = $(SRC:src/%=lib/%)
 NODE          = $(BIN)/babel-node $(BABEL_OPTIONS)
-MOCHA_OPTIONS = --compilers js:babel/register --require ./src/__tests__/setup.js
+MOCHA_OPTIONS = --compilers js:babel-core/register --require ./src/__tests__/setup.js
 MOCHA					= NODE_ENV=test node $(BIN)/mocha $(MOCHA_OPTIONS)
 
 build:
@@ -37,4 +37,4 @@ clean:
 lib/%: src/%
 	@echo "Building $<"
 	@mkdir -p $(@D)
-	@$(BIN)/babel $(BABEL_OPTIONS) -o $@ $<
+	@NODE_ENV=production $(BIN)/babel $(BABEL_OPTIONS) -o $@ $<

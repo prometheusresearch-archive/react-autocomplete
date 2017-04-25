@@ -1,31 +1,33 @@
 /**
  * @copyright 2015, Prometheus Research, LLC
+ * @flow
  */
 
-import React, {PropTypes} from 'react';
+import type {AutocompleteResult} from './index';
+
+import React from 'react';
+import ReactDOM from 'react-dom';
 import scrollIntoView from 'dom-scroll-into-view';
-import * as Stylesheet from 'react-stylesheet';
-import {style as styleHostComponent} from 'react-dom-stylesheet';
 import Result from './Result';
 
+type Props = {
+  results: Array<AutocompleteResult>,
+  focusedValue: AutocompleteResult,
+  onSelect: AutocompleteResult => void,
+  Result: ReactClass<*>,
+  Root: ReactClass<*>,
+};
+
 export default class ResultList extends React.Component {
-  static propTypes = {
-    results: PropTypes.array,
-    focusedValue: PropTypes.object,
-    onSelect: PropTypes.func,
+  props: Props;
+
+  static stylesheet = {
+    Root: 'ul',
+    Result: Result,
   };
 
-  static stylesheet = Stylesheet.create(
-    {
-      Root: 'ul',
-      Result: Result,
-    },
-    {styleHostComponent},
-  );
-
   render() {
-    let {results, ...props} = this.props;
-    let {Root} = this.constructor.stylesheet;
+    const {results, Root = this.constructor.stylesheet.Root, ...props} = this.props;
     return (
       <Root {...props} tabIndex={-1}>
         {results.map(this.renderResult, this)}
@@ -33,10 +35,11 @@ export default class ResultList extends React.Component {
     );
   }
 
-  renderResult(result) {
-    let focus = this.props.focusedValue && this.props.focusedValue.id === result.id;
+  renderResult(result: AutocompleteResult) {
+    const {focusedValue, Result = this.constructor.stylesheet.Result} = this.props;
+    const focus = focusedValue && focusedValue.id === result.id;
     return (
-      <this.constructor.stylesheet.Result
+      <Result
         ref={focus ? 'focus' : undefined}
         key={result.id}
         result={result}
@@ -50,7 +53,7 @@ export default class ResultList extends React.Component {
     this._scrollToFocused();
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: Props) {
     if (prevProps.focusedValue !== this.props.focusedValue) {
       this._scrollToFocused();
     }
@@ -59,10 +62,12 @@ export default class ResultList extends React.Component {
   _scrollToFocused() {
     let focus = this.refs && this.refs.focus;
     if (focus) {
-      let container = React.findDOMNode(this);
-      let node = React.findDOMNode(focus);
+      const container = ReactDOM.findDOMNode(this);
+      const node = ReactDOM.findDOMNode(focus);
       scrollIntoView(node, container, {onlyScrollIfNeeded: true});
-      node.focus();
+      if (node instanceof HTMLElement) {
+        node.focus();
+      }
     }
   }
 }
