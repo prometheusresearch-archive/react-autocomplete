@@ -2,7 +2,6 @@
  * @copyright 2015, Prometheus Research, LLC
  */
 
-import autobind from 'autobind-decorator';
 import React, {PropTypes} from 'react';
 import debounce from 'lodash/function/debounce';
 import * as Stylesheet from 'react-stylesheet';
@@ -175,67 +174,67 @@ export default class Autocomplete extends React.Component {
     }
   }
 
-  @autobind showResults(searchTerm) {
+  showResults = searchTerm => {
     this.setState({results: []});
     this.props.search(this.props.options, searchTerm.trim(), this._onSearchComplete);
-  }
+  };
 
-  @autobind showAllResults() {
+  showAllResults = () => {
     this.showResults('');
     this._open();
-  }
+  };
 
-  @autobind _onListRef(ref) {
+  _onListRef = ref => {
     this._list = ref;
-  }
+  };
 
-  @autobind _onSearchRef(ref) {
+  _onSearchRef = ref => {
     this._search = ref;
-  }
+  };
 
-  @autobind _onFocus(e) {
+  _onFocus = e => {
     if (!this._ignoreFocus && !this.state.open) {
       this.showAllResults();
     }
     this.props.onFocus(e); // eslint-disable-line react/prop-types
-  }
+  };
 
-  @autobind _onBlur(e) {
+  _onBlur = e => {
     if (!this._ignoreFocus) {
       this._close();
     }
     this.props.onBlur(e); // eslint-disable-line react/prop-types
-  }
+  };
 
-  @autobind _onListFocus() {
+  _onListFocus = () => {
     if (!this._ignoreFocus) {
       this._open();
     }
-  }
+  };
 
-  @autobind _onListBlur() {
+  _onListBlur = () => {
     if (!this._ignoreFocus) {
       this._close();
     }
-  }
+  };
 
-  @autobind _layerDidMount(element) {
+  _layerDidMount = element => {
     let target = React.findDOMNode(this._search);
     let size = target.getBoundingClientRect();
     element.style.width = `${size.width}px`;
     this._tether = new Tether({element, target, ...TETHER_CONFIG});
-  }
+  };
 
-  @autobind _layerDidUpdate() {
+  _layerDidUpdate = () => {
     this._tether.position();
-  }
+  };
 
-  @autobind _layerWillUnmount() {
+  _layerWillUnmount = () => {
     this._tether.disable();
     this._tether = null;
-  }
+  };
 
-  @autobind _setOpen(open) {
+  _setOpen = open => {
     this.setState(state => {
       state = {...state, open};
       if (!open) {
@@ -247,37 +246,37 @@ export default class Autocomplete extends React.Component {
       }
       return state;
     });
-  }
+  };
 
-  @autobind _open() {
+  _open = () => {
     this._setOpenDebounced(true);
-  }
+  };
 
-  @autobind _close() {
+  _close = () => {
     this._setOpenDebounced(false);
-  }
+  };
 
-  @autobind _focus() {
+  _focus = () => {
     this._ignoreFocus = true;
     React.findDOMNode(this._search).focus();
     this.setState({focusedValue: null});
     this._ignoreFocus = false;
-  }
+  };
 
-  @autobind _focusAndClose() {
+  _focusAndClose = () => {
     this._focus();
     this._close();
-  }
+  };
 
-  @autobind _searchTermFromProps(props) {
+  _searchTermFromProps = props => {
     let {searchTerm, value} = props;
     if (!searchTerm && value) {
       searchTerm = value.title;
     }
     return searchTerm || '';
-  }
+  };
 
-  @autobind _onValueChange(value) {
+  _onValueChange = value => {
     this.setState(
       {
         value: value,
@@ -287,9 +286,9 @@ export default class Autocomplete extends React.Component {
       this._focusAndClose,
     );
     this.props.onChange(value);
-  }
+  };
 
-  @autobind _onSearchComplete(err, results) {
+  _onSearchComplete = (err, results) => {
     if (err) {
       if (this.props.onError) {
         this.props.onError(err);
@@ -302,9 +301,9 @@ export default class Autocomplete extends React.Component {
       open: true,
       results: results,
     });
-  }
+  };
 
-  @autobind _onQueryChange(e) {
+  _onQueryChange = e => {
     let searchTerm = e.target.value;
     let nextState = {
       searchTerm: searchTerm,
@@ -316,16 +315,16 @@ export default class Autocomplete extends React.Component {
     }
     this.setState(nextState);
     this.showResults(searchTerm);
-  }
+  };
 
-  @autobind _onClick(e) {
+  _onClick = e => {
     if (!this.state.open) {
       this.showAllResults();
     }
     this.props.onClick(e); // eslint-disable-line react/prop-types
-  }
+  };
 
-  @autobind _onQueryKeyDown(e) {
+  _onQueryKeyDown = e => {
     let {open, focusedValue, results} = this.state;
     switch (e.key) {
       case KEYS.ENTER:
@@ -372,7 +371,7 @@ export default class Autocomplete extends React.Component {
       default:
         break;
     }
-  }
+  };
 
   get _indexOfFocusedValue() {
     if (!this.state.focusedValue) {
