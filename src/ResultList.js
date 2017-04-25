@@ -12,10 +12,10 @@ import Result from './Result';
 
 type Props = {
   results: Array<AutocompleteResult>,
-  focusedValue: AutocompleteResult,
+  focusedValue: ?AutocompleteResult,
   onSelect: AutocompleteResult => void,
-  Result: ReactClass<*>,
-  Root: ReactClass<*>,
+  Result?: ReactClass<*>,
+  Root?: ReactClass<*>,
 };
 
 export default class ResultList extends React.Component {
@@ -43,7 +43,7 @@ export default class ResultList extends React.Component {
         ref={focus ? 'focus' : undefined}
         key={result.id}
         result={result}
-        focus={focus}
+        focus={!!focus}
         onClick={this.props.onSelect}
       />
     );

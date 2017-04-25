@@ -9,8 +9,6 @@ import invariant from 'invariant';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import debounce from 'lodash/function/debounce';
-import * as Stylesheet from 'react-stylesheet';
-import {style as styleHostComponent} from 'react-dom-stylesheet';
 import emptyFunction from 'empty/function';
 import Tether from 'tether';
 import Layer from './Layer';
@@ -103,6 +101,10 @@ type Props = {
    * Input placeholder.
    */
   placeholder: string,
+
+  Root: ReactClass<*>,
+  Input: ReactClass<*>,
+  ResultList: ReactClass<*>,
 };
 
 export default class Autocomplete extends React.Component {
@@ -116,20 +118,11 @@ export default class Autocomplete extends React.Component {
     onBlur: emptyFunction,
   };
 
-  static stylesheet = Stylesheet.create(
-    {
-      Root: {
-        position: 'relative',
-        outline: 'none',
-      },
-      Input: {
-        Component: 'input',
-        width: '100%',
-      },
-      ResultList: ResultList,
-    },
-    {styleHostComponent},
-  );
+  static stylesheet = {
+    Root: 'div',
+    Input: 'input',
+    ResultList: ResultList,
+  };
 
   state: {
     open: boolean,
@@ -159,11 +152,18 @@ export default class Autocomplete extends React.Component {
   }
 
   render() {
-    let {placeholder, ...props} = this.props;
-    let {Root, Input, ResultList} = this.constructor.stylesheet;
-    let {open} = this.state;
+    const {stylesheet} = this.constructor;
+    const {
+      placeholder,
+      Root = stylesheet.Root,
+      Input = stylesheet.Input,
+      ResultList = stylesheet.ResultList,
+      ...props
+    } = this.props;
+    const {open} = this.state;
     return (
       <Root
+        style={{position: 'relative', outline: 'none'}}
         {...props}
         value={undefined}
         search={undefined}
